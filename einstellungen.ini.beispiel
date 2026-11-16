@@ -1,0 +1,18 @@
+; Kopiere diese Datei zu "einstellungen.ini" und trage deine Werte ein.
+
+[shop]
+; Name, der oben im Dashboard steht
+name = Mein Shop
+
+[daten]
+; Ab wann Daten von Whatnot geholt werden (JJJJ-MM-TT), am besten der Monat deines ersten Verkaufs.
+; Leer = 1. Januar des Vorjahres.
+daten_ab = 2025-01-01
+
+[steuern]
+; Jahr, für das Umsatzsteuer und Gewinn berechnet werden
+steuerjahr = 2026
+; Ab wann du regelbesteuert bist (JJJJ-MM-TT).
+; Leer lassen, wenn du das ganze Jahr Kleinunternehmer (§ 19 UStG) bist.
+; Das ganze Jahr regelbesteuert: 2026-01-01
+regelbesteuert_ab =

@@ -1,0 +1,70 @@
+{
+  "ausgang": {
+    "title": "Eigene Ausgangsrechnungen {{STEUERJAHR}}",
+    "description": "Rechnungen außerhalb von Whatnot aus dem Ordner rechnungen_ausgehend: Datum, Nummer, Artikel, Netto, USt-Satz, USt, Brutto, Status und Hinweis. Ohne Kundennamen und Adressen.",
+    "schedule": "Wird mit belege_auswertung.py neu erzeugt, wenn neue Belege oder Rechnungen dazukommen.",
+    "file": "ausgang.csv"
+  },
+  "belege": {
+    "title": "Eingangsbelege {{STEUERJAHR}}",
+    "description": "Alle Rechnungen und Belege aus dem Ordner belege (inkl. Unterordner): Datum, Lieferant, Nummer, Kategorie, Netto, USt, Brutto, Status für den Vorsteuerabzug, Hinweis, abziehbare und unsichere Vorsteuer sowie Kosten für die Gewinnermittlung.",
+    "schedule": "Wird mit belege_auswertung.py neu erzeugt, wenn neue Belege oder Rechnungen dazukommen.",
+    "file": "belege.csv"
+  },
+  "daily": {
+    "title": "Tageswerte",
+    "description": "Whatnots Tagesreport: Umsatz, Bestellungen, Käufer, neue Follower, Stream-Minuten und Watchtime je Tag.",
+    "staleAfterHours": 48,
+    "schedule": "Täglich gegen 7 Uhr automatisch aktualisiert (geplante Aufgabe in der Claude-App, läuft nur bei geöffneter App).",
+    "file": "daily.csv"
+  },
+  "finance": {
+    "title": "Finanzbericht",
+    "description": "Whatnots Finanzbericht: jede Buchung mit Artikelpreis, Provision, Zahlungsgebühr, Gutschein, Versand und Käuferland, ohne Käufernamen.",
+    "staleAfterHours": 48,
+    "schedule": "Täglich gegen 7 Uhr automatisch aktualisiert (geplante Aufgabe in der Claude-App, läuft nur bei geöffneter App).",
+    "file": "finance.csv"
+  },
+  "order_items": {
+    "title": "Artikel je Bestellung",
+    "description": "Jeder verkaufte Artikel mit Titel, Menge und Stückpreis.",
+    "staleAfterHours": 48,
+    "schedule": "Täglich gegen 7 Uhr automatisch aktualisiert (geplante Aufgabe in der Claude-App, läuft nur bei geöffneter App).",
+    "file": "order_items.csv"
+  },
+  "orders": {
+    "title": "Bestellungen",
+    "description": "Alle Bestellungen mit Status, Verkaufsart, Beträgen sowie Whatnot-Benutzername und Anzeigename der Käufer (keine Adressen).",
+    "staleAfterHours": 48,
+    "schedule": "Täglich gegen 7 Uhr automatisch aktualisiert (geplante Aufgabe in der Claude-App, läuft nur bei geöffneter App).",
+    "file": "orders.csv"
+  },
+  "products": {
+    "title": "Produktkatalog",
+    "description": "Alle Produkte im Whatnot-Katalog mit Kategorie, Versandprofil und Verkaufsformat.",
+    "staleAfterHours": 48,
+    "schedule": "Täglich gegen 7 Uhr automatisch aktualisiert (geplante Aufgabe in der Claude-App, läuft nur bei geöffneter App).",
+    "file": "products.csv"
+  },
+  "shipments": {
+    "title": "Sendungen",
+    "description": "Alle Sendungen mit Status, Versandart, Gewicht, Maßen, Abgabefrist, Trackingnummer und Empfänger (Benutzername und Anzeigename, keine Adresse).",
+    "staleAfterHours": 48,
+    "schedule": "Täglich gegen 7 Uhr automatisch aktualisiert (geplante Aufgabe in der Claude-App, läuft nur bei geöffneter App).",
+    "file": "shipments.csv"
+  },
+  "shows": {
+    "title": "Shows mit Kennzahlen",
+    "description": "Alle beendeten öffentlichen Shows mit Whatnot-Analytics (Umsatz, Bestellungen, Zuschauer).",
+    "staleAfterHours": 48,
+    "schedule": "Täglich gegen 7 Uhr automatisch aktualisiert (geplante Aufgabe in der Claude-App, läuft nur bei geöffneter App).",
+    "file": "shows.csv"
+  },
+  "upcoming": {
+    "title": "Geplante Shows",
+    "description": "Alle Shows, die bei Whatnot als geplant eingetragen sind.",
+    "staleAfterHours": 48,
+    "schedule": "Täglich gegen 7 Uhr automatisch aktualisiert (geplante Aufgabe in der Claude-App, läuft nur bei geöffneter App).",
+    "file": "upcoming.csv"
+  }
+}

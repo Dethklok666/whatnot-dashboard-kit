@@ -1,0 +1,12 @@
+# Geheim und persönlich – nie ins Repo
+.env
+einstellungen.ini
+export/
+belege/*
+!belege/LIESMICH.txt
+rechnungen_ausgehend/*
+!rechnungen_ausgehend/LIESMICH.txt
+belege_manuell.csv
+ausgang_manuell.csv
+__pycache__/
+*.pyc

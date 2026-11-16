@@ -1,0 +1,2341 @@
+<meta name="dash-one-writer">
+<style>
+.gc{display:flex;flex-direction:column;gap:var(--cds-gap-xl);font-family:var(--font-anthropic-sans);color:var(--color-fg)}
+.gc-head{display:flex;flex-direction:column;gap:var(--cds-gap-sm);max-width:72ch}
+.gc-eyebrow{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);letter-spacing:.06em;text-transform:uppercase}
+.gc-title{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);line-height:1.15;margin:0;text-wrap:balance}
+.gc-lede{margin:0;font-size:var(--cds-font-size-body);line-height:1.55}
+.gc-lede b{font-weight:var(--cds-font-weight-medium);font-variant-numeric:tabular-nums}
+.gc-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:var(--cds-gap-md)}
+.gc-card{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);display:flex;flex-direction:column;gap:var(--cds-gap-sm);min-width:0}
+.gc-card.is-attn{border-color:var(--color-warn)}
+.gc-label{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.gc-big{font-family:var(--font-anthropic-serif);font-weight:400;font-size:2rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.gc-sub{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
+.gc-delta{font-weight:var(--cds-font-weight-medium)}
+.gc-delta.is-good{color:var(--color-ok)}
+.gc-delta.is-bad{color:var(--color-bad)}
+.gc-section{display:flex;flex-direction:column;gap:var(--cds-gap-md)}
+.gc-h2{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);margin:0}
+.gc-h3{font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium);margin:0}
+.gc-note{margin:0;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);max-width:72ch;line-height:1.5}
+.gc-grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:var(--cds-gap-md)}
+.gc-chart{position:relative;min-height:240px}
+.gc-chart.is-small{min-height:190px}
+.gc-chart svg{display:block;overflow:visible}
+.gc-axis text{fill:var(--cds-text-secondary);font-size:var(--cds-font-size-caption);font-family:var(--font-anthropic-sans)}
+.gc-axis line,.gc-base{stroke:var(--cds-chart-axis)}
+.gc-grid line{stroke:var(--cds-chart-grid)}
+.gc-legend{display:flex;flex-wrap:wrap;gap:var(--cds-gap-md);font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0;padding:0;list-style:none}
+.gc-legend li{display:flex;align-items:center;gap:6px}
+.gc-sw{width:10px;height:10px;border-radius:2px;background:var(--cds-chart-muted)}
+.gc-tip{position:absolute;pointer-events:none;background:var(--cds-surface-popover);border:1px solid var(--cds-border);box-shadow:var(--cds-shadow-popover);border-radius:var(--cds-radius);padding:var(--cds-pad-xs) var(--cds-pad-sm);font-size:var(--cds-font-size-caption);z-index:5;max-width:260px;display:flex;flex-direction:column;gap:2px}
+.gc-tip[hidden]{display:none}
+.gc-tip strong{font-weight:var(--cds-font-weight-medium)}
+.gc-tip span{color:var(--cds-text-secondary);font-variant-numeric:tabular-nums}
+.gc-scroll{overflow-x:auto}
+.gc-scroll.is-tall{max-height:28rem;overflow-y:auto}
+.gc-scroll.is-tall thead th{position:sticky;top:0;background:var(--color-bg-card, var(--color-bg, Canvas))}
+.gc-search{width:100%;max-width:20rem;box-sizing:border-box;padding:6px 10px;margin:8px 0;font:inherit;font-size:var(--cds-font-size-caption);color:inherit;background:transparent;border:1px solid var(--color-border-line);border-radius:6px}
+.gc-cardhead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.gc-table{width:100%;border-collapse:collapse;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums}
+.gc-table th{text-align:left;font-weight:var(--cds-font-weight-medium);color:var(--color-fg-muted);padding:6px 8px;border-bottom:1px solid var(--color-border-line);white-space:nowrap}
+.gc-table td{padding:6px 8px;border-bottom:1px solid var(--color-border-line);vertical-align:top}
+.gc-table .num{text-align:right;white-space:nowrap}
+.gc-table .gc-t{min-width:12rem}
+.gc-table .nw{white-space:nowrap}
+.gc-hbars{display:flex;flex-direction:column;gap:8px}
+.gc-hrow{display:grid;grid-template-columns:minmax(0,11rem) 1fr auto;gap:var(--cds-gap-sm);align-items:center;font-size:var(--cds-font-size-caption)}
+.gc-hrow .lab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc-track{height:10px;background:var(--cds-chart-grid);border-radius:2px;overflow:hidden}
+.gc-fill{height:100%;border-radius:2px}
+.gc-hrow .val{font-variant-numeric:tabular-nums;text-align:right;min-width:3.5rem}
+.gc-pills{display:flex;flex-wrap:wrap;gap:var(--cds-gap-sm)}
+.gc-pill{display:inline-flex;gap:6px;align-items:baseline;padding:4px 10px;border-radius:999px;border:1px solid var(--color-border-line);font-size:var(--cds-font-size-caption)}
+.gc-pill b{font-variant-numeric:tabular-nums;font-weight:var(--cds-font-weight-medium)}
+.gc-pill.is-warn{border-color:var(--color-warn);color:var(--color-warn)}
+.gc-pill.is-bad{border-color:var(--color-bad);color:var(--color-bad)}
+.gc-pill.is-ok{border-color:var(--color-ok)}
+.gc a{color:inherit}
+.gc-seg{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gc-seg button,.gc-seg select{font:inherit;font-size:var(--cds-font-size-caption);color:inherit;background:transparent;border:1px solid var(--color-border-line);border-radius:999px;padding:4px 12px;cursor:pointer}
+.gc-seg button[aria-pressed=true]{border-color:var(--color-fg);font-weight:var(--cds-font-weight-medium)}
+.gc-seg button b{font-variant-numeric:tabular-nums;margin-left:4px}
+.gc-seg button:disabled{opacity:.4;cursor:default}
+.gc-expand tbody tr.row{cursor:pointer}
+.gc-expand tbody tr.row:hover td{background:var(--cds-chart-grid)}
+.gc-expand .tog{width:1.2rem;color:var(--color-fg-muted)}
+.gc-expand .tog button{all:unset;cursor:pointer;display:inline-block;width:1rem;text-align:center}
+.gc-expand tr.det td{background:var(--color-panel);padding:10px 12px 14px}
+.gc-flag{display:inline-block;padding:1px 8px;border-radius:999px;border:1px solid var(--color-border-line);white-space:nowrap}
+.gc-flag.is-ok{border-color:var(--color-ok);color:var(--color-ok)}
+.gc-list{padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.gc-flag.is-bad{border-color:var(--color-bad);color:var(--color-bad)}
+.gc-flag.is-warn{border-color:var(--color-warn);color:var(--color-warn)}
+.gc-det{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px 24px}
+.gc-det dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0}
+.gc-det dt{color:var(--color-fg-muted)}
+.gc-det dd{margin:0;overflow-wrap:anywhere}
+.gc-det h4{margin:0 0 4px;font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium)}
+.gc-det ul{margin:0;padding-left:1.1rem}
+.gc-chart svg rect.clk{cursor:pointer}
+.gc-foot summary{cursor:pointer;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.gc-foot dl{display:grid;grid-template-columns:minmax(0,13rem) 1fr;gap:6px 16px;font-size:var(--cds-font-size-caption);margin:var(--cds-gap-sm) 0 0}
+.gc-foot dt{font-weight:var(--cds-font-weight-medium)}
+.gc-foot dd{margin:0;color:var(--color-fg-muted)}
+.gc-nav{display:flex;flex-wrap:wrap;gap:var(--cds-gap-xs) var(--cds-gap-md);font-size:var(--cds-font-size-caption)}
+.gc-nav a{color:var(--color-fg-muted);text-decoration:none;padding:2px 0;border-bottom:1px solid var(--color-border-line)}
+.gc-nav a:hover,.gc-nav a:focus-visible{color:var(--color-fg);border-bottom-color:var(--color-fg)}
+.gc-tiles.is-compact .gc-big{font-size:1.6rem}
+.gc-heat{position:relative;display:grid;gap:3px;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums;overflow-x:auto}
+.gc-heat .hd{color:var(--cds-text-secondary);text-align:center;white-space:nowrap}
+.gc-heat .rl{color:var(--cds-text-secondary);padding-right:6px;white-space:nowrap;align-self:center}
+.gc-heat .cell{position:relative;min-height:30px;border-radius:3px;background:var(--cds-chart-grid);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.gc-heat .cell i{position:absolute;inset:0}
+.gc-heat .cell span{position:relative;font-size:11px}
+.gc-heat .cell.is-strong span{color:var(--color-bg)}
+[data-dash-source-state=refreshing]{opacity:.5}
+@media (max-width:520px){.gc-foot dl{grid-template-columns:1fr}.gc-hrow{grid-template-columns:minmax(0,7rem) 1fr auto}}
+</style>
+
+<div class="gc">
+  <header class="gc-head" id="kopf">
+    <div class="gc-eyebrow">Whatnot · {{SHOP_NAME}} · Datenstand <span data-draw="asof" data-source="kpi" data-field="window_end" data-row="0">—</span></div>
+    <h1 class="gc-title">{{SHOP_NAME}} Cockpit</h1>
+    <p class="gc-lede" data-read lang="de">In den letzten 30 Tagen hat der Shop <b data-draw="tw-sales" data-source="kpi" data-field="sales_30" data-row="0">—</b> Warenwert aus <b data-draw="tw-orders" data-source="kpi" data-field="orders_30" data-row="0">—</b> Bestellungen gemacht, <b data-draw="tw-pct" data-source="kpi" data-field="change_abs_pct" data-row="0">—</b> <span data-draw="tw-dir">—</span> als in den 30 Tagen davor.</p>
+    <nav class="gc-nav" aria-label="Bereiche">
+      <a href="#zu-tun">Zu tun</a><a href="#umsatz">Umsatz</a><a href="#monat">Monat im Detail</a><a href="#finanzen">Finanzen</a><a href="#steuern">Steuern &amp; Gewinn</a><a href="#bestseller">Bestseller</a><a href="#kunden">Kunden</a><a href="#shows">Shows</a><a href="#publikum">Publikum</a><a href="#versand-sortiment">Versand &amp; Sortiment</a>
+    </nav>
+  </header>
+
+  <section class="gc-tiles" id="kennzahlen" aria-label="Kennzahlen der letzten 30 Tage">
+    <div class="gc-card" id="tile-umsatz">
+      <div class="gc-label">Warenwert · letzte 30 Tage</div>
+      <div class="gc-big" data-draw="k-sales" data-source="kpi" data-field="sales_30" data-row="0">—</div>
+      <div class="gc-sub"><span class="gc-delta" data-draw="k-delta" data-source="kpi" data-field="change_pct" data-row="0">—</span> ggü. den 30 Tagen davor</div>
+    </div>
+    <div class="gc-card" id="tile-bestellungen">
+      <div class="gc-label">Bestellungen · letzte 30 Tage</div>
+      <div class="gc-big" data-draw="k-orders" data-source="kpi" data-field="orders_30" data-row="0">—</div>
+      <div class="gc-sub">davor: <span data-draw="k-orders-prev" data-source="kpi" data-field="orders_prev_30" data-row="0">—</span></div>
+    </div>
+    <div class="gc-card" id="tile-bestellwert">
+      <div class="gc-label">Ø Bestellwert · letzte 30 Tage</div>
+      <div class="gc-big" data-draw="k-aov" data-source="kpi" data-field="avg_order_30" data-row="0">—</div>
+      <div class="gc-sub">Warenwert je Bestellung</div>
+    </div>
+    <div class="gc-card" id="tile-shows">
+      <div class="gc-label">Shows · letzte 30 Tage</div>
+      <div class="gc-big" data-draw="k-shows" data-source="kpi" data-field="shows_30" data-row="0">—</div>
+      <div class="gc-sub">nächste geplant: <span data-draw="k-next" data-source="kpi" data-field="next_show" data-row="0">—</span></div>
+    </div>
+    <div class="gc-card" id="tile-versand" data-attn>
+      <div class="gc-label">Zu versenden</div>
+      <div class="gc-big" data-draw="k-open" data-source="kpi" data-field="open_shipments" data-row="0">—</div>
+      <div class="gc-sub">Abgabe bis <span data-draw="k-due" data-source="kpi" data-field="next_dropoff" data-row="0">—</span></div>
+    </div>
+  </section>
+
+  <section class="gc-section" id="zu-tun">
+    <h2 class="gc-h2">Zu tun</h2>
+    <div class="gc-card" id="sendungen">
+      <div class="gc-cardhead">
+        <h3 class="gc-h3">Sendungen prüfen</h3>
+        <input class="gc-search" id="ship-search" type="search" placeholder="Benutzername, Name, Artikel oder Trackingnummer …" aria-label="Sendungen suchen">
+      </div>
+      <div class="gc-pills" data-draw="ship-status" data-source="ship_status"></div>
+      <div class="gc-seg" role="group" aria-label="Sendungen filtern">
+        <button type="button" data-ship-filter="problem" aria-pressed="true">Mit Problem <b data-draw="ship-n-problem" data-source="ship_list">—</b></button>
+        <button type="button" data-ship-filter="open" aria-pressed="false">Noch abzugeben <b data-draw="ship-n-open" data-source="ship_list">—</b></button>
+        <button type="button" data-ship-filter="all" aria-pressed="false">Alle <b data-draw="ship-n-all" data-source="ship_list">—</b></button>
+      </div>
+      <div class="gc-scroll is-tall">
+        <table class="gc-table gc-expand" data-source="ship_list" data-row-key="shipment_id">
+          <thead><tr><th aria-label="Details"></th><th data-field="problem">Hinweis</th><th data-field="created_at">Erstellt</th><th data-field="buyer_username">Empfänger</th><th data-field="item_count" class="num">Artikel</th><th data-field="item_value" class="num">Warenwert</th><th data-field="service_label">Versandart</th><th data-field="status_label">Status</th></tr></thead>
+          <tbody data-draw="tb-ship"></tbody>
+        </table>
+      </div>
+      <p class="gc-note" data-draw="ship-more" data-source="ship_list"></p>
+      <p class="gc-note">Auf eine Zeile klicken, um Artikel, Bestellungen, Trackingnummer und den Link zu Whatnot zu sehen. Als Problem gilt: Zustellung fehlgeschlagen, offene Aktion bei Whatnot, Abgabefrist überschritten, länger als 10 Tage unterwegs, ohne Sendungsverfolgung oder eine Ersatzsendung, die selbst nicht ankam.</p>
+    </div>
+    <div class="gc-grid2">
+      <div class="gc-card" id="naechste-shows">
+        <h3 class="gc-h3">Nächste Shows</h3>
+        <div class="gc-scroll">
+          <table class="gc-table" data-source="next_shows" data-row-key="show_id">
+            <thead><tr><th data-field="scheduled_start_at">Termin</th><th data-field="title">Show</th></tr></thead>
+            <tbody data-draw="tb-next"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gc-section" id="umsatz">
+    <h2 class="gc-h2">Warenwert pro Monat</h2>
+    <div class="gc-card">
+      <ul class="gc-legend">
+        <li><span class="gc-sw" data-i="0"></span>Sofortkauf</li>
+        <li><span class="gc-sw" data-i="1"></span>Auktion</li>
+        <li><span class="gc-sw" data-i="2"></span>Giveaway</li>
+      </ul>
+      <div class="gc-chart" id="chart-monat" data-draw="ch-monthly" data-source="monthly"></div>
+      <p class="gc-note">Warenwert ist die Zwischensumme der Bestellungen ohne Versand und Steuern. Stornierte und fehlgeschlagene Bestellungen zählen nicht mit. Der laufende Monat ist noch nicht vollständig. Ein Klick auf einen Balken öffnet den Monat im Detail.</p>
+    </div>
+  </section>
+
+  <section class="gc-section" id="monat">
+    <div class="gc-cardhead">
+      <h2 class="gc-h2">Monat im Detail: <span data-draw="m-title" data-source="month_summary">—</span></h2>
+      <div class="gc-seg" role="group" aria-label="Monat wählen" data-draw="m-nav" data-source="month_summary"></div>
+    </div>
+    <div class="gc-tiles is-compact" data-draw="m-tiles" data-source="month_summary"></div>
+    <div class="gc-card">
+      <h3 class="gc-h3">Warenwert pro Tag</h3>
+      <div class="gc-chart is-small" data-draw="m-days" data-source="month_days"></div>
+    </div>
+    <div class="gc-grid2">
+      <div class="gc-card">
+        <h3 class="gc-h3">Top-Artikel im Monat</h3>
+        <div class="gc-scroll">
+          <table class="gc-table" data-source="month_items" data-row-key="key">
+            <thead><tr><th data-field="title">Artikel</th><th data-field="revenue" class="num">Umsatz</th><th data-field="quantity" class="num">Stück</th></tr></thead>
+            <tbody data-draw="m-items"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="gc-card">
+        <h3 class="gc-h3">Top-Kunden im Monat</h3>
+        <div class="gc-scroll">
+          <table class="gc-table" data-source="month_customers" data-row-key="key">
+            <thead><tr><th data-field="username">Kunde</th><th data-field="orders" class="num">Käufe</th><th data-field="revenue" class="num">Umsatz</th><th data-field="is_new">Neu</th></tr></thead>
+            <tbody data-draw="m-cust"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="gc-card">
+      <h3 class="gc-h3">Shows im Monat</h3>
+      <div class="gc-scroll">
+        <table class="gc-table" data-source="shows" data-row-key="show_id">
+          <thead><tr><th data-field="start_time">Datum</th><th data-field="title">Show</th><th data-field="sales_eur" class="num">Umsatz</th><th data-field="orders" class="num">Bestell.</th><th data-field="buyers" class="num">Käufer</th><th data-field="peak_viewers" class="num">Max. Zuschauer</th><th class="num">€ / Stunde</th></tr></thead>
+          <tbody data-draw="m-shows"></tbody>
+        </table>
+      </div>
+      <p class="gc-note" data-draw="m-shows-note" data-source="shows"></p>
+    </div>
+  </section>
+
+  <section class="gc-section" id="finanzen">
+    <h2 class="gc-h2">Finanzen und Gebühren</h2>
+    <p class="gc-note">Aus Whatnots Finanzbericht, der ab <span data-draw="f-start" data-source="finance_kpi" data-field="first_month" data-row="0">—</span> vorliegt.</p>
+    <div class="gc-tiles is-compact">
+      <div class="gc-card"><div class="gc-label">Artikelwert</div><div class="gc-big" data-draw="f-items" data-source="finance_kpi" data-field="item_value" data-row="0">—</div><div class="gc-sub">vor Gebühren und Gutscheinen</div></div>
+      <div class="gc-card"><div class="gc-label">Gebühren gesamt</div><div class="gc-big" data-draw="f-fees" data-source="finance_kpi" data-field="fees" data-row="0">—</div><div class="gc-sub"><span data-draw="f-rate" data-source="finance_kpi" data-field="fee_rate_pct" data-row="0">—</span> vom Artikelwert</div></div>
+      <div class="gc-card"><div class="gc-label">Gutscheine und Versand selbst getragen</div><div class="gc-big" data-draw="f-other" data-source="finance_kpi" data-field="seller_costs" data-row="0">—</div><div class="gc-sub">Gutscheinkosten plus übernommene Versandkosten</div></div>
+      <div class="gc-card"><div class="gc-label">Trinkgeld</div><div class="gc-big" data-draw="f-tips" data-source="finance_kpi" data-field="tips" data-row="0">—</div><div class="gc-sub">von Zuschauern</div></div>
+      <div class="gc-card"><div class="gc-label">Netto gutgeschrieben</div><div class="gc-big" data-draw="f-net" data-source="finance_kpi" data-field="net" data-row="0">—</div><div class="gc-sub">Summe aller Buchungen</div></div>
+    </div>
+    <div class="gc-card">
+      <h3 class="gc-h3">Abzüge pro Monat</h3>
+      <ul class="gc-legend">
+        <li><span class="gc-sw" data-i="0"></span>Provision</li>
+        <li><span class="gc-sw" data-i="1"></span>Zahlungsgebühr</li>
+        <li><span class="gc-sw" data-i="2"></span>Gutscheine</li>
+        <li><span class="gc-sw" data-i="3"></span>Versand selbst getragen</li>
+      </ul>
+      <div class="gc-chart" id="chart-abzuege" data-draw="ch-fees" data-source="finance_monthly"></div>
+    </div>
+    <div class="gc-grid2">
+      <div class="gc-card" id="finanz-tabelle">
+        <h3 class="gc-h3">Monatsübersicht</h3>
+        <div class="gc-scroll">
+          <table class="gc-table" data-source="finance_monthly" data-row-key="month">
+            <thead><tr><th data-field="month">Monat</th><th data-field="item_value" class="num">Artikelwert</th><th data-field="fees" class="num">Gebühren</th><th data-field="fee_rate_pct" class="num">Quote</th><th data-field="net" class="num">Netto</th></tr></thead>
+            <tbody data-draw="tb-fin"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="gc-card" id="laender">
+        <h3 class="gc-h3">Bestellungen nach Käuferland</h3>
+        <div class="gc-hbars" data-draw="ch-countries" data-source="countries"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gc-section" id="steuern">
+    <h2 class="gc-h2">Steuern und Gewinn {{STEUERJAHR}}</h2>
+    <p class="gc-note">Schätzung aus Whatnot-Verkäufen, <span data-draw="t-nausgang" data-source="ausgang">—</span> eigenen Ausgangsrechnungen und den <span data-draw="t-nbelege" data-source="tax_kpi" data-field="belege" data-row="0">—</span> Belegen im Ordner „belege“. {{UST_SATZ}} Keine Steuerberatung, bitte vor der Voranmeldung vom Steuerberater prüfen lassen.</p>
+    <div class="gc-tiles is-compact">
+      <div class="gc-card"><div class="gc-label">Umsatzsteuer {{UST_AB_KURZ}}</div><div class="gc-big" data-draw="t-ust" data-source="tax_kpi" data-field="ust" data-row="0">—</div><div class="gc-sub">aus <span data-draw="t-rev-ust" data-source="tax_kpi" data-field="revenue_ust_period" data-row="0">—</span> Verkäufen</div></div>
+      <div class="gc-card"><div class="gc-label">Vorsteuer abziehbar</div><div class="gc-big" data-draw="t-vst" data-source="tax_kpi" data-field="vorsteuer" data-row="0">—</div><div class="gc-sub">dazu <span data-draw="t-vpr" data-source="tax_kpi" data-field="vorsteuer_pruefen" data-row="0">—</span> unsicher (prüfen)</div></div>
+      <div class="gc-card" data-draw="t-zl-card" data-source="tax_kpi"></div>
+      <div class="gc-card"><div class="gc-label">Gewinn {{STEUERJAHR}} bisher</div><div class="gc-big" data-draw="t-gewinn" data-source="tax_kpi" data-field="gewinn" data-row="0">—</div><div class="gc-sub">vor Einkommensteuer, Wareneinkauf sofort als Kosten; inkl. <span data-draw="t-direct" data-source="tax_kpi" data-field="revenue_direct" data-row="0">—</span> aus eigenen Rechnungen</div></div>
+    </div>
+    <div class="gc-card">
+      <h3 class="gc-h3">Gewinn pro Monat</h3>
+      <div class="gc-chart is-small" data-draw="ch-gewinn" data-source="tax_monthly"></div>
+      <p class="gc-note">Monate mit großem Wareneinkauf erscheinen als Verlust, weil Einkäufe sofort als Kosten zählen (Einnahmen-Überschuss-Rechnung). Der Lagerbestand ist nicht bewertet.</p>
+    </div>
+    <div class="gc-grid2">
+      <div class="gc-card">
+        <h3 class="gc-h3">Umsatzsteuer pro Quartal</h3>
+        <div class="gc-scroll">
+          <table class="gc-table" data-source="tax_quarters" data-row-key="quarter">
+            <thead><tr><th data-field="quarter">Zeitraum</th><th data-field="ust" class="num">USt</th><th data-field="vorsteuer" class="num">Vorsteuer</th><th data-field="zahllast" class="num">Zahllast</th><th data-field="zahllast_mit_pruefen" class="num">inkl. prüfen</th></tr></thead>
+            <tbody data-draw="tb-tax-q"></tbody>
+          </table>
+        </div>
+        <p class="gc-note">Negativ heißt Erstattung durch das Finanzamt. „inkl. prüfen“ zieht auch die unsicheren Vorsteuerbeträge ab.</p>
+      </div>
+      <div class="gc-card">
+        <h3 class="gc-h3">Kosten aus Belegen nach Kategorie</h3>
+        <div class="gc-hbars" data-draw="ch-cost-cat" data-source="cost_categories"></div>
+      </div>
+    </div>
+    <div class="gc-card">
+      <h3 class="gc-h3">Monatsübersicht</h3>
+      <div class="gc-scroll">
+        <table class="gc-table" data-source="tax_monthly" data-row-key="month">
+          <thead><tr><th data-field="month">Monat</th><th data-field="revenue_whatnot" class="num">Whatnot brutto</th><th data-field="revenue_direct" class="num">Eigene Rechnungen</th><th data-field="ust" class="num">USt</th><th data-field="vorsteuer" class="num">Vorsteuer</th><th data-field="zahllast" class="num">Zahllast</th><th data-field="belegkosten" class="num">Belege</th><th data-field="whatnot_kosten" class="num">Whatnot-Gebühren &amp; Versand</th><th data-field="gewinn" class="num">Gewinn</th></tr></thead>
+          <tbody data-draw="tb-tax-m"></tbody>
+        </table>
+      </div>
+      <p class="gc-note" data-draw="t-est-note" data-source="tax_kpi"></p>
+    </div>
+    <div class="gc-card">
+      <div class="gc-cardhead">
+        <h3 class="gc-h3">Belege</h3>
+        <div class="gc-seg" role="group" aria-label="Belege filtern">
+          <button type="button" data-bel-filter="all" aria-pressed="true">Alle</button>
+          <button type="button" data-bel-filter="abziehbar" aria-pressed="false">Vorsteuer abziehbar</button>
+          <button type="button" data-bel-filter="pruefen" aria-pressed="false">Prüfen</button>
+          <button type="button" data-bel-filter="ohne" aria-pressed="false">Ohne Vorsteuer</button>
+        </div>
+      </div>
+      <input type="search" class="gc-search" id="bel-search" placeholder="Lieferant, Nummer oder Kategorie suchen" aria-label="Belege durchsuchen">
+      <div class="gc-scroll is-tall">
+        <table class="gc-table" data-source="belege" data-row-key="datei">
+          <thead><tr><th data-field="datum">Datum</th><th data-field="lieferant">Lieferant</th><th data-field="nummer">Nummer</th><th data-field="kategorie">Kategorie</th><th data-field="brutto" class="num">Brutto</th><th data-field="vorsteuer" class="num">Vorsteuer</th><th data-field="status">Status</th><th data-field="hinweis">Hinweis</th></tr></thead>
+          <tbody data-draw="tb-belege"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="gc-card">
+      <h3 class="gc-h3">Eigene Rechnungen außerhalb von Whatnot</h3>
+      <div class="gc-scroll">
+        <table class="gc-table" data-source="ausgang" data-row-key="nummer">
+          <thead><tr><th data-field="datum">Datum</th><th data-field="nummer" class="num">Nr.</th><th data-field="artikel">Artikel</th><th data-field="netto" class="num">Netto</th><th data-field="ust" class="num">USt</th><th data-field="brutto" class="num">Brutto</th><th data-field="status">Status</th><th data-field="hinweis">Hinweis</th></tr></thead>
+          <tbody data-draw="tb-ausgang"></tbody>
+        </table>
+      </div>
+      <p class="gc-note" data-draw="t-ausgang-note" data-source="ausgang"></p>
+    </div>
+    <div class="gc-card">
+      <h3 class="gc-h3">Annahmen</h3>
+      <ul class="gc-note gc-list">
+        <li>Umsatzsteuer: bei eigenen Rechnungen die ausgewiesene USt, bei Whatnot 19 % aus dem Verkaufspreis nach Gutschein (Regelbesteuerung, keine Differenzbesteuerung), zeitlich nach Bestelldatum.</li>
+        <li>Vorsteuer: nur aus Belegen {{UST_AB_KURZ}} mit ausgewiesener USt. „Prüfen“ heißt, die USt ist unsicher: Rechnung ohne Steuernummer, Bestellbestätigung statt Rechnung, Proforma, ausländische USt oder privater Anteil.</li>
+        <li>Whatnot-Gebühren laufen vermutlich über das Reverse-Charge-Verfahren (USt und Vorsteuer heben sich auf) und zählen hier nur als Kosten.</li>
+        <li>Gewinn: Verkäufe (als Kleinunternehmer brutto, mit Regelbesteuerung netto) plus Trinkgeld, minus Whatnot-Gebühren, selbst getragener Versand und Belegkosten (mit Vorsteuerabzug netto, sonst brutto). Für Bestellungen, die noch nicht im Finanzbericht stehen, sind die Gebühren mit der Quote der letzten drei Monate geschätzt.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="gc-section" id="bestseller">
+    <h2 class="gc-h2">Bestseller</h2>
+    <div class="gc-grid2">
+      <div class="gc-card" id="top-artikel">
+        <h3 class="gc-h3">Top 15 Artikel nach Umsatz</h3>
+        <div class="gc-scroll">
+          <table class="gc-table" data-source="bestsellers" data-row-key="title">
+            <thead><tr><th data-field="title">Artikel</th><th data-field="revenue" class="num">Umsatz</th><th data-field="quantity" class="num">Stück</th><th data-field="avg_price" class="num">Ø Preis</th></tr></thead>
+            <tbody data-draw="tb-best"></tbody>
+          </table>
+        </div>
+        <p class="gc-note">Gleiche Artikel mit fortlaufender Nummer (z. B. „#1“, „#2“) sind zusammengefasst. Giveaways zählen nicht.</p>
+      </div>
+      <div class="gc-card" id="preisklassen">
+        <h3 class="gc-h3">Verkäufe nach Preisklasse</h3>
+        <ul class="gc-legend">
+          <li><span class="gc-sw" data-i="0"></span>Anzahl verkaufter Artikel</li>
+        </ul>
+        <div class="gc-chart is-small" id="chart-preise" data-draw="ch-prices" data-source="price_buckets"></div>
+        <div class="gc-hbars" data-draw="ch-price-rev" data-source="price_buckets"></div>
+        <p class="gc-note">Balken oben: Anzahl der verkauften Artikel. Liste darunter: Umsatz je Preisklasse.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gc-section" id="kunden">
+    <h2 class="gc-h2">Kunden</h2>
+    <div class="gc-tiles is-compact">
+      <div class="gc-card"><div class="gc-label">Kunden gesamt</div><div class="gc-big" data-draw="c-total" data-source="customers_kpi" data-field="buyers" data-row="0">—</div><div class="gc-sub">mit mindestens einem Kauf</div></div>
+      <div class="gc-card"><div class="gc-label">Wiederkäufer</div><div class="gc-big" data-draw="c-repeat" data-source="customers_kpi" data-field="repeat_pct" data-row="0">—</div><div class="gc-sub"><span data-draw="c-repeat-n" data-source="customers_kpi" data-field="repeat_buyers" data-row="0">—</span> Kunden kauften mehr als einmal</div></div>
+      <div class="gc-card"><div class="gc-label">Ø Käufe je Kunde</div><div class="gc-big" data-draw="c-avg" data-source="customers_kpi" data-field="avg_orders" data-row="0">—</div><div class="gc-sub">Ø Umsatz je Kunde <span data-draw="c-value" data-source="customers_kpi" data-field="avg_value" data-row="0">—</span></div></div>
+      <div class="gc-card"><div class="gc-label">Umsatzanteil der Top 10 %</div><div class="gc-big" data-draw="c-top" data-source="customers_kpi" data-field="top10_share_pct" data-row="0">—</div><div class="gc-sub">der treuesten Kunden</div></div>
+    </div>
+    <div class="gc-grid2">
+      <div class="gc-card">
+        <h3 class="gc-h3">Kunden nach Anzahl der Käufe</h3>
+        <div class="gc-scroll">
+          <table class="gc-table" data-source="customer_buckets" data-row-key="bucket">
+            <thead><tr><th data-field="bucket">Käufe</th><th data-field="buyers" class="num">Kunden</th><th data-field="revenue" class="num">Umsatz</th><th data-field="revenue_share_pct" class="num">Anteil</th></tr></thead>
+            <tbody data-draw="tb-cust"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="gc-card">
+        <h3 class="gc-h3">Neue und wiederkehrende Kunden pro Monat</h3>
+        <ul class="gc-legend">
+          <li><span class="gc-sw" data-i="0"></span>wiederkehrend</li>
+          <li><span class="gc-sw" data-i="1"></span>erster Kauf</li>
+        </ul>
+        <div class="gc-chart is-small" id="chart-kunden-monat" data-draw="ch-cust-month" data-source="customers_monthly"></div>
+        <p class="gc-note">Jeder Kunde zählt pro Monat einmal, egal wie oft er gekauft hat.</p>
+      </div>
+    </div>
+    <div class="gc-card" style="margin-top:16px">
+      <div class="gc-cardhead">
+        <h3 class="gc-h3">Alle Kunden nach Umsatz</h3>
+        <input class="gc-search" id="cust-search" type="search" placeholder="Benutzername oder Name suchen …" aria-label="Kunden suchen">
+      </div>
+      <div class="gc-scroll is-tall">
+        <table class="gc-table" data-source="customer_list" data-row-key="buyer_key">
+          <thead><tr><th data-field="rank" class="num">#</th><th data-field="username">Benutzername</th><th data-field="name">Name</th><th data-field="orders" class="num">Käufe</th><th data-field="revenue" class="num">Umsatz</th><th data-field="avg" class="num">Ø Kauf</th><th data-field="giveaways" class="num">Giveaways</th><th data-field="first" class="nw">Erster Kauf</th><th data-field="last" class="nw">Letzter Kauf</th></tr></thead>
+          <tbody data-draw="tb-cust-list"></tbody>
+        </table>
+      </div>
+    </div>
+    <p class="gc-note">Benutzername und Anzeigename stammen aus den Whatnot-Bestellungen, ein Klick auf den Benutzernamen öffnet das Profil auf Whatnot. Gezählt werden Käufe ohne Giveaways, Stornos und fehlgeschlagene Bestellungen. Gewonnene Giveaways stehen in einer eigenen Spalte.</p>
+  </section>
+
+  <section class="gc-section" id="shows">
+    <h2 class="gc-h2">Shows</h2>
+    <div class="gc-card">
+      <h3 class="gc-h3">Umsatz je Show</h3>
+      <div class="gc-chart" id="chart-shows" data-draw="ch-shows" data-source="show_perf"></div>
+      <p class="gc-note">Umsatz laut Whatnot-Analytics je Show. Für die ältesten Shows (Juli bis Anfang November 2025) hat Whatnot noch keine Kennzahlen berechnet, sie fehlen hier.</p>
+    </div>
+    <div class="gc-grid2">
+      <div class="gc-card" id="top-shows">
+        <h3 class="gc-h3">Top 10 Shows nach Umsatz</h3>
+        <div class="gc-scroll">
+          <table class="gc-table" data-source="show_perf" data-row-key="show_id">
+            <thead><tr><th data-field="start_time">Datum</th><th data-field="title">Show</th><th data-field="sales" class="num">Umsatz</th><th data-field="orders" class="num">Best.</th><th data-field="sales_per_hour" class="num">€ / Std.</th></tr></thead>
+            <tbody data-draw="tb-top"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="gc-card" id="letzte-shows">
+        <h3 class="gc-h3">Letzte 10 Shows</h3>
+        <div class="gc-scroll">
+          <table class="gc-table" data-source="show_perf" data-row-key="show_id">
+            <thead><tr><th data-field="start_time">Datum</th><th data-field="sales" class="num">Umsatz</th><th data-field="orders" class="num">Best.</th><th data-field="buyers" class="num">Käufer</th><th data-field="peak_viewers" class="num">Zuschauer max.</th><th data-field="stream_minutes" class="num">Minuten</th></tr></thead>
+            <tbody data-draw="tb-recent"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gc-section" id="publikum">
+    <h2 class="gc-h2">Publikum</h2>
+    <div class="gc-grid2">
+      <div class="gc-card">
+        <h3 class="gc-h3">Ø Zuschauer gleichzeitig (Spitze) pro Show</h3>
+        <div class="gc-chart is-small" id="chart-zuschauer" data-draw="ch-peak" data-source="audience_monthly"></div>
+      </div>
+      <div class="gc-card">
+        <h3 class="gc-h3">Ø Klickrate der Show-Vorschau</h3>
+        <div class="gc-chart is-small" id="chart-klickrate" data-draw="ch-ctr" data-source="audience_monthly"></div>
+        <p class="gc-note">Anteil der Leute, die eure Show in der App gesehen und angeklickt haben.</p>
+      </div>
+      <div class="gc-card">
+        <h3 class="gc-h3">Stamm- und Neukäufer pro Monat</h3>
+        <ul class="gc-legend">
+          <li><span class="gc-sw" data-i="0"></span>Stammkäufer</li>
+          <li><span class="gc-sw" data-i="1"></span>Neukäufer</li>
+        </ul>
+        <div class="gc-chart is-small" id="chart-kaeufer" data-draw="ch-buyers" data-source="audience_monthly"></div>
+        <p class="gc-note">Käufer werden je Show gezählt und über den Monat summiert. Wer in drei Shows kauft, zählt dreimal.</p>
+      </div>
+      <div class="gc-card">
+        <h3 class="gc-h3">Neue Follower pro Monat</h3>
+        <div class="gc-sub">insgesamt <span data-draw="d-follows" data-source="daily_kpi" data-field="follows" data-row="0">—</span> seit Juli 2025</div>
+        <div class="gc-chart is-small" id="chart-follower" data-draw="ch-follows" data-source="daily_monthly"></div>
+      </div>
+      <div class="gc-card">
+        <h3 class="gc-h3">Ø Watchtime pro Zuschauer</h3>
+        <div class="gc-chart is-small" id="chart-watchtime" data-draw="ch-watch" data-source="daily_monthly"></div>
+        <p class="gc-note">Durchschnitt der Streamtage im Monat, in Minuten.</p>
+      </div>
+    </div>
+    <div class="gc-card" id="kaufzeiten">
+      <h3 class="gc-h3">Wann gekauft wird</h3>
+      <p class="gc-note">Bestellungen nach Wochentag und Uhrzeit (deutsche Zeit), ohne Giveaways. Je dunkler, desto mehr.</p>
+      <div class="gc-heat" data-draw="ch-heat" data-source="heat"></div>
+    </div>
+  </section>
+
+  <section class="gc-section" id="versand-sortiment">
+    <h2 class="gc-h2">Versand und Sortiment</h2>
+    <div class="gc-grid2">
+      <div class="gc-card" id="versandarten">
+        <h3 class="gc-h3">Sendungen nach Versandart</h3>
+        <div class="gc-hbars" data-draw="ch-service" data-source="ship_service"></div>
+      </div>
+      <div class="gc-card" id="kategorien">
+        <h3 class="gc-h3">Produkte nach Kategorie</h3>
+        <div class="gc-sub"><span data-draw="k-products" data-source="kpi" data-field="products_total" data-row="0">—</span> Produkte im Katalog</div>
+        <div class="gc-hbars" data-draw="ch-cat" data-source="categories"></div>
+        <h3 class="gc-h3">Produkte nach Verkaufsformat</h3>
+        <div class="gc-hbars" data-draw="ch-format" data-source="product_formats"></div>
+        <p class="gc-note">„Ohne Format“ sind Produkte, denen noch kein Verkaufsformat zugewiesen ist, meist alte Live-Artikel.</p>
+      </div>
+    </div>
+  </section>
+
+  <details class="gc-foot" id="hinweise">
+    <summary>Begriffe und Datenquelle</summary>
+    <dl>
+      <dt>Warenwert</dt><dd>Zwischensumme der Bestellungen ohne Versand und Steuern, ohne stornierte und fehlgeschlagene Bestellungen.</dd>
+      <dt>Umsatz (Shows)</dt><dd>Die Umsatzzahl, die Whatnot in der Show-Auswertung berechnet. Sie kann leicht vom Warenwert abweichen.</dd>
+      <dt>Geschätzter Erlös</dt><dd>Whatnots Schätzung, was nach Gebühren bei euch ankommt.</dd>
+      <dt>€ / Std.</dt><dd>Umsatz einer Show geteilt durch ihre Stream-Dauer.</dd>
+      <dt>Artikelwert</dt><dd>Ursprünglicher Preis der verkauften Artikel laut Finanzbericht, vor Gebühren und Gutscheinen.</dd>
+      <dt>Gebühren</dt><dd>Whatnot-Provision und Zahlungsgebühr, jeweils inklusive Steuer darauf.</dd>
+      <dt>Netto gutgeschrieben</dt><dd>Summe aller Buchungen im Finanzbericht: Artikelwert minus Gebühren, Gutscheine und selbst getragener Versand, plus Trinkgeld.</dd>
+      <dt>Wiederkäufer</dt><dd>Kunden mit mehr als einem Kauf im gesamten Zeitraum.</dd>
+      <dt>Letzte 30 Tage</dt><dd>Gerechnet ab der neuesten Bestellung im Datenstand, nicht ab heute.</dd>
+      <dt>Datenquelle</dt><dd>Whatnot Seller API v2, abgerufen mit dem Skript dashboard_daten.py. Übernommen werden Whatnot-Benutzername und Anzeigename der Käufer, keine Adressen und keine Nachrichten.</dd>
+    </dl>
+  </details>
+</div>
+
+<script>
+const LOC = d3.formatLocale({decimal: ',', thousands: '.', grouping: [3], currency: ['', ' €']});
+const TLOC = d3.timeFormatLocale({
+  dateTime: '%A, %e. %B %Y, %X', date: '%d.%m.%Y', time: '%H:%M:%S', periods: ['AM', 'PM'],
+  days: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+  shortDays: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+  months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+  shortMonths: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+});
+const monthDate = (m) => { const [y, mo] = m.split('-'); return new Date(+y, +mo - 1, 1); };
+const F = {
+  eur: LOC.format('$,.0f'),
+  eur2: LOC.format('$,.2f'),
+  int: LOC.format(',.0f'),
+  dec1: LOC.format(',.1f'),
+  date: (s) => TLOC.format('%d.%m.%Y')(new Date(s)),
+  dateShort: (s) => TLOC.format('%d.%m.%y')(new Date(s)),
+  showTime: (s) => TLOC.format('%a %d.%m.%Y, %H:%M')(new Date(s)),
+  mon: (m) => TLOC.format('%b %y')(monthDate(m)),
+  monLong: (m) => TLOC.format('%B %Y')(monthDate(m)),
+};
+
+// ---------- Berechnungen ----------
+dash.calc('kpi', {
+  title: 'Kennzahlen der letzten 30 Tage',
+  description: 'Warenwert, Bestellungen und Shows der letzten 30 Tage bis zur neuesten Bestellung, verglichen mit den 30 Tagen davor, dazu offene Sendungen.',
+  inputs: ['orders', 'shows', 'shipments', 'upcoming', 'products'],
+  fn: (orders, shows, shipments, upcoming, products) => {
+    const day = 864e5;
+    const endMs = orders.reduce((m, o) => Math.max(m, Date.parse(o.created_at)), 0);
+    const inWindow = (t, fromDays, toDays) => t > endMs - toDays * day && t <= endMs - fromDays * day;
+    let sales30 = 0, orders30 = 0, salesPrev = 0, ordersPrev = 0;
+    for (const o of orders) {
+      if (o.status === 'cancelled' || o.status === 'failed') continue;
+      const t = Date.parse(o.created_at), v = Number(o.subtotal_eur) || 0;
+      if (inWindow(t, 0, 30)) { sales30 += v; orders30 += 1; }
+      else if (inWindow(t, 30, 60)) { salesPrev += v; ordersPrev += 1; }
+    }
+    const open = shipments.filter((s) => s.status === 'created');
+    const dues = open.map((s) => s.dropoff_due).filter(Boolean).sort();
+    const next = upcoming.map((s) => s.scheduled_start_at).filter((d) => Date.parse(d) > endMs).sort();
+    const change = salesPrev ? Math.round((sales30 / salesPrev - 1) * 1000) / 10 : null;
+    return [{
+      window_end: new Date(endMs).toISOString(),
+      sales_30: Math.round(sales30 * 100) / 100,
+      sales_prev_30: Math.round(salesPrev * 100) / 100,
+      change_pct: change,
+      change_abs_pct: change === null ? null : Math.abs(change),
+      orders_30: orders30,
+      orders_prev_30: ordersPrev,
+      avg_order_30: orders30 ? Math.round(sales30 / orders30 * 100) / 100 : null,
+      shows_30: shows.filter((s) => inWindow(Date.parse(s.start_time), 0, 30)).length,
+      next_show: next[0] || null,
+      open_shipments: open.length,
+      next_dropoff: dues[0] || null,
+      products_total: products.length,
+    }];
+  },
+});
+
+dash.calc('monthly', {
+  title: 'Warenwert pro Monat',
+  description: 'Zwischensumme aller nicht stornierten und nicht fehlgeschlagenen Bestellungen je Monat und Verkaufsart.',
+  inputs: ['orders'],
+  fn: (orders) => {
+    const byMonth = new Map();
+    for (const o of orders) {
+      if (o.status === 'cancelled' || o.status === 'failed') continue;
+      const d = new Date(o.created_at);
+      const month = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      const m = byMonth.get(month) || {month, buy_it_now: 0, auction: 0, giveaway: 0, total: 0, orders: 0};
+      const v = Number(o.subtotal_eur) || 0;
+      if (o.transaction_type in m) m[o.transaction_type] += v;
+      m.total += v;
+      m.orders += 1;
+      byMonth.set(month, m);
+    }
+    const r = (v) => Math.round(v * 100) / 100;
+    return [...byMonth.values()]
+      .sort((a, b) => (a.month < b.month ? -1 : 1))
+      .map((m) => ({...m, buy_it_now: r(m.buy_it_now), auction: r(m.auction), giveaway: r(m.giveaway), total: r(m.total)}));
+  },
+});
+
+dash.calc('show_perf', {
+  title: 'Kennzahlen je Show',
+  description: 'Alle beendeten öffentlichen Shows, für die Whatnot Kennzahlen berechnet hat, mit Umsatz je Stream-Stunde.',
+  inputs: ['shows'],
+  fn: (shows) => shows
+    .filter((s) => s.calculation_status === 'GENERATED')
+    .map((s) => {
+      const sales = Number(s.sales_eur) || 0, minutes = Number(s.stream_minutes) || 0;
+      return {
+        show_id: s.show_id, start_time: s.start_time, title: s.title, sales,
+        earnings: Number(s.earnings_eur) || 0, orders: Number(s.orders) || 0, buyers: Number(s.buyers) || 0,
+        peak_viewers: Number(s.peak_viewers) || 0, stream_minutes: minutes,
+        sales_per_hour: minutes ? Math.round(sales / minutes * 60) : null,
+      };
+    })
+    .sort((a, b) => (a.start_time < b.start_time ? -1 : 1)),
+});
+
+dash.calc('audience_monthly', {
+  title: 'Publikum pro Monat',
+  description: 'Durchschnittliche Spitzenzuschauer und Klickrate je Show sowie summierte Neu- und Stammkäufer, nach Monat.',
+  inputs: ['shows'],
+  fn: (shows) => {
+    const byMonth = new Map();
+    for (const s of shows) {
+      if (s.calculation_status !== 'GENERATED') continue;
+      const d = new Date(s.start_time);
+      const month = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      const m = byMonth.get(month) || {month, shows: 0, peak_sum: 0, ctr_sum: 0, ctr_n: 0, new_buyers: 0, returning_buyers: 0};
+      m.shows += 1;
+      m.peak_sum += Number(s.peak_viewers) || 0;
+      if (s.clickthrough_pct !== '' && s.clickthrough_pct != null) { m.ctr_sum += Number(s.clickthrough_pct); m.ctr_n += 1; }
+      m.new_buyers += Number(s.new_buyers) || 0;
+      m.returning_buyers += Number(s.returning_buyers) || 0;
+      byMonth.set(month, m);
+    }
+    return [...byMonth.values()]
+      .sort((a, b) => (a.month < b.month ? -1 : 1))
+      .map((m) => ({
+        month: m.month, shows: m.shows,
+        avg_peak: Math.round(m.peak_sum / m.shows * 10) / 10,
+        avg_ctr: m.ctr_n ? Math.round(m.ctr_sum / m.ctr_n * 100) / 100 : null,
+        new_buyers: m.new_buyers, returning_buyers: m.returning_buyers,
+      }));
+  },
+});
+
+dash.calc('ship_status', {
+  title: 'Sendungen nach Status',
+  description: 'Anzahl aller Sendungen je Status.',
+  inputs: ['shipments'],
+  fn: (shipments) => {
+    const labels = {created: 'Zu versenden', in_transit: 'Unterwegs', delivered: 'Zugestellt', failed: 'Problem', cancelled: 'Storniert'};
+    const order = ['created', 'in_transit', 'failed', 'delivered', 'cancelled'];
+    const counts = {};
+    for (const s of shipments) counts[s.status] = (counts[s.status] || 0) + 1;
+    return Object.keys(counts)
+      .sort((a, b) => (order.indexOf(a) + 99 * (order.indexOf(a) < 0)) - (order.indexOf(b) + 99 * (order.indexOf(b) < 0)))
+      .map((status) => ({status, label: labels[status] || status, count: counts[status]}));
+  },
+});
+
+dash.calc('ship_service', {
+  title: 'Sendungen nach Versandart',
+  description: 'Anzahl aller nicht stornierten Sendungen je Versandart.',
+  inputs: ['shipments'],
+  fn: (shipments) => {
+    const labels = {
+      deutsche_post_grossbrief: 'Deutsche Post Großbrief', deutsche_post_kompaktbrief: 'Deutsche Post Kompaktbrief',
+      deutsche_post_standardbrief: 'Deutsche Post Standardbrief', deutsche_post_maxibrief: 'Deutsche Post Maxibrief',
+      dhl_de_kleinpaket: 'DHL Kleinpaket', dhl_de_paket: 'DHL Paket', dhl_de_paket_international: 'DHL Paket international',
+    };
+    const counts = {};
+    for (const s of shipments) {
+      if (s.status === 'cancelled') continue;
+      const key = s.service || s.method || 'unbekannt';
+      counts[key] = (counts[key] || 0) + 1;
+    }
+    return Object.entries(counts)
+      .map(([service, count]) => ({service, label: labels[service] || service.replace(/_/g, ' '), count}))
+      .sort((a, b) => b.count - a.count);
+  },
+});
+
+dash.calc('open_ship', {
+  title: 'Offene Sendungen',
+  description: 'Sendungen, die noch abgegeben werden müssen, sortiert nach Abgabefrist.',
+  inputs: ['shipments'],
+  fn: (shipments) => {
+    const labels = {
+      deutsche_post_grossbrief: 'DP Großbrief', deutsche_post_kompaktbrief: 'DP Kompaktbrief',
+      deutsche_post_standardbrief: 'DP Standardbrief', dhl_de_kleinpaket: 'DHL Kleinpaket',
+      dhl_de_paket: 'DHL Paket', dhl_de_paket_international: 'DHL Paket intl.',
+    };
+    return shipments
+      .filter((s) => s.status === 'created')
+      .map((s) => ({
+        shipment_id: s.shipment_id, created_at: s.created_at, service_label: labels[s.service] || s.service,
+        weight_g: Number(s.weight_g) || null, dropoff_due: s.dropoff_due || null, url: s.url,
+      }))
+      .sort((a, b) => String(a.dropoff_due).localeCompare(String(b.dropoff_due)));
+  },
+});
+
+dash.calc('next_shows', {
+  title: 'Nächste Shows',
+  description: 'Die sechs nächsten geplanten Shows.',
+  inputs: ['upcoming'],
+  fn: (upcoming) => upcoming
+    .slice()
+    .sort((a, b) => (a.scheduled_start_at < b.scheduled_start_at ? -1 : 1))
+    .slice(0, 6)
+    .map((s) => ({show_id: s.show_id, scheduled_start_at: s.scheduled_start_at, title: s.title, url: s.url})),
+});
+
+dash.calc('categories', {
+  title: 'Produkte nach Kategorie',
+  description: 'Anzahl der Produkte im Katalog je Whatnot-Kategorie.',
+  inputs: ['products'],
+  fn: (products) => {
+    const counts = {};
+    for (const p of products) counts[p.category] = (counts[p.category] || 0) + 1;
+    return Object.entries(counts).map(([category, count]) => ({category, count})).sort((a, b) => b.count - a.count);
+  },
+});
+
+// ================= Sendungen prüfen =================
+const monthOf = (s) => { const d = new Date(s); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
+const dayOf = (s) => monthOf(s) + '-' + String(new Date(s).getDate()).padStart(2, '0');
+const r2 = (v) => Math.round(v * 100) / 100;
+const OK_ORDER = (o) => o.status !== 'cancelled' && o.status !== 'failed';
+
+dash.calc('ship_list', {
+  title: 'Sendungen prüfen',
+  description: 'Alle Sendungen mit Empfänger, enthaltenen Artikeln, Bestellungen, Trackingnummer und Problem-Hinweis (fehlgeschlagen, offene Aktion, Abgabefrist überschritten, über 10 Tage unterwegs, ohne Sendungsverfolgung, Ersatzsendung nicht angekommen). Problemfälle zuerst, sonst neueste zuerst.',
+  inputs: ['shipments', 'order_items', 'orders'],
+  fn: (ships, items, orders) => {
+    const SERVICE = {
+      deutsche_post_grossbrief: 'DP Großbrief', deutsche_post_kompaktbrief: 'DP Kompaktbrief',
+      deutsche_post_standardbrief: 'DP Standardbrief', deutsche_post_maxibrief: 'DP Maxibrief',
+      dhl_de_kleinpaket: 'DHL Kleinpaket', dhl_de_paket: 'DHL Paket', dhl_de_paket_international: 'DHL Paket intl.',
+      dhl_de_warenpost_international: 'DHL Warenpost intl.',
+    };
+    const STATUS = {created: 'Zu versenden', in_transit: 'Unterwegs', delivered: 'Zugestellt', failed: 'Fehlgeschlagen', cancelled: 'Storniert'};
+    const byShip = new Map();
+    for (const it of items) {
+      if (!it.shipment_id) continue;
+      if (!byShip.has(it.shipment_id)) byShip.set(it.shipment_id, []);
+      byShip.get(it.shipment_id).push(it);
+    }
+    const ordById = new Map(orders.map((o) => [o.order_id, o]));
+    const shipById = new Map(ships.map((s) => [s.shipment_id, s]));
+    const finalOf = (s) => {  // Ersatzsendungen bis zur letzten verfolgen
+      let cur = s;
+      for (let n = 0; n < 10 && cur.replacement_shipment_id && shipById.has(cur.replacement_shipment_id); n++) cur = shipById.get(cur.replacement_shipment_id);
+      return cur;
+    };
+    const ref = ships.reduce((m, s) => Math.max(m, Date.parse(s.updated_at || s.created_at) || 0), 0);
+    const day = 864e5;
+    const num = (v) => (v === '' || v == null ? null : Number(v));
+    return ships.map((s) => {
+      const its = byShip.get(s.shipment_id) || [];
+      const ordIds = [...new Set(its.map((i) => i.order_id))];
+      const ords = ordIds.map((id) => ordById.get(id)).filter(Boolean);
+      const flags = [];
+      if (s.status === 'failed') flags.push(['Zustellung fehlgeschlagen', 2]);
+      if (Number(s.open_actions) > 0) flags.push(['Aktion nötig' + (s.required_actions ? ': ' + s.required_actions : ''), 2]);
+      if (s.status === 'created' && s.dropoff_due && Date.parse(s.dropoff_due) < ref) flags.push(['Abgabefrist überschritten', 2]);
+      const age = Math.floor((ref - Date.parse(s.created_at)) / day);
+      if (s.status === 'in_transit' && age > 10) flags.push([`Seit ${age} Tagen unterwegs`, 1]);
+      if (s.status !== 'cancelled' && s.status !== 'created' && s.has_tracking === 'no') flags.push(['Ohne Sendungsverfolgung', 1]);
+      let replaced = '';
+      if (s.replacement_shipment_id) {
+        const fin = finalOf(s);
+        if (['delivered', 'in_transit', 'created'].includes(fin.status)) replaced = 'Ersetzt, Ersatzsendung ' + (STATUS[fin.status] || fin.status).toLowerCase();
+        else flags.push(['Ersatzsendung ebenfalls ' + (STATUS[fin.status] || fin.status).toLowerCase(), 1]);
+      }
+      const severity = flags.reduce((m, f) => Math.max(m, f[1]), 0);
+      const code = s.tracking_code || '';
+      const dims = [num(s.length_cm), num(s.width_cm), num(s.height_cm)];
+      const username = s.buyer_username || (ords[0] && ords[0].buyer_username) || '';
+      const name = s.buyer_name || (ords[0] && ords[0].buyer_name) || '';
+      const itemList = its.map((i) => ({title: i.title, quantity: Number(i.quantity) || 1, price: Number(i.unit_price_eur) || 0, order_id: i.order_id}));
+      return {
+        shipment_id: s.shipment_id, created_at: s.created_at, updated_at: s.updated_at || null,
+        status: s.status, status_label: STATUS[s.status] || s.status,
+        problem: flags.map((f) => f[0]).join(' · '), severity, replaced, is_open: s.status === 'created',
+        service_label: SERVICE[s.service] || (s.service || '').replace(/_/g, ' '),
+        weight_g: num(s.weight_g), dims: dims.every((d) => d != null) ? dims : null,
+        dropoff_due: s.dropoff_due || null, tracking_code: code,
+        tracking_url: code ? 'https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?piececode=' + encodeURIComponent(code) : '',
+        buyer_username: username, buyer_name: name,
+        profile_url: username ? 'https://www.whatnot.com/user/' + encodeURIComponent(username) : '',
+        item_count: itemList.reduce((n, i) => n + i.quantity, 0),
+        item_value: r2(itemList.reduce((n, i) => n + i.price * i.quantity, 0)),
+        items: itemList,
+        orders: ords.map((o) => ({order_id: o.order_id, created_at: o.created_at, status: o.status, type: o.transaction_type, total: Number(o.total_eur) || 0})),
+        seller_paid: num(s.seller_paid_eur), replacement_shipment_id: s.replacement_shipment_id || '',
+        url: s.url,
+        search: [username, name, code, s.shipment_id, ...itemList.map((i) => i.title)].join(' ').toLowerCase(),
+      };
+    }).sort((a, b) => b.severity - a.severity || (a.created_at < b.created_at ? 1 : -1));
+  },
+});
+
+// ================= Monat im Detail =================
+dash.calc('month_summary', {
+  title: 'Monatsübersicht',
+  description: 'Je Monat: Warenwert, Bestellungen, Ø Bestellwert, Kunden und Neukunden (aus den Bestellungen), Shows und Stream-Stunden (aus der Show-Liste) sowie Gebühren und Netto laut Finanzbericht.',
+  inputs: ['orders', 'finance_monthly', 'shows'],
+  fn: (orders, fin, shows) => {
+    const first = new Map();
+    for (const o of orders) {
+      if (!o.buyer_key || o.transaction_type === 'giveaway' || !OK_ORDER(o)) continue;
+      const m = monthOf(o.created_at);
+      if (!first.has(o.buyer_key) || m < first.get(o.buyer_key)) first.set(o.buyer_key, m);
+    }
+    const by = new Map();
+    const get = (m) => {
+      if (!by.has(m)) by.set(m, {month: m, sales: 0, orders: 0, giveaways: 0, buyers: new Set(), shows: 0, minutes: 0});
+      return by.get(m);
+    };
+    for (const o of orders) {
+      if (!OK_ORDER(o)) continue;
+      const r = get(monthOf(o.created_at));
+      r.sales += Number(o.subtotal_eur) || 0;
+      r.orders += 1;
+      if (o.transaction_type === 'giveaway') r.giveaways += 1;
+      else if (o.buyer_key) r.buyers.add(o.buyer_key);
+    }
+    for (const s of shows) {
+      const r = get(monthOf(s.start_time));
+      r.shows += 1;
+      r.minutes += Number(s.stream_minutes) || 0;
+    }
+    const finBy = new Map(fin.map((f) => [f.month, f]));
+    return [...by.values()].sort((a, b) => (a.month < b.month ? -1 : 1)).map((r) => {
+      const f = finBy.get(r.month);
+      const buyers = [...r.buyers];
+      return {
+        month: r.month, sales: r2(r.sales), orders: r.orders, giveaways: r.giveaways,
+        avg_order: r.orders - r.giveaways > 0 ? r2(r.sales / (r.orders - r.giveaways)) : null,
+        customers: buyers.length, new_customers: buyers.filter((k) => first.get(k) === r.month).length,
+        shows: r.shows, stream_hours: Math.round(r.minutes / 6) / 10,
+        fees: f ? f.fees : null, fee_rate_pct: f ? f.fee_rate_pct : null, net: f ? f.net : null,
+      };
+    });
+  },
+});
+
+dash.calc('month_days', {
+  title: 'Warenwert pro Tag',
+  description: 'Warenwert und Bestellungen je Kalendertag (ohne Stornos und fehlgeschlagene Bestellungen).',
+  inputs: ['orders'],
+  fn: (orders) => {
+    const by = new Map();
+    for (const o of orders) {
+      if (!OK_ORDER(o)) continue;
+      const d = dayOf(o.created_at);
+      const r = by.get(d) || {day: d, month: d.slice(0, 7), sales: 0, orders: 0};
+      r.sales += Number(o.subtotal_eur) || 0;
+      r.orders += 1;
+      by.set(d, r);
+    }
+    return [...by.values()].sort((a, b) => (a.day < b.day ? -1 : 1)).map((r) => ({...r, sales: r2(r.sales)}));
+  },
+});
+
+dash.calc('month_items', {
+  title: 'Top-Artikel je Monat',
+  description: 'Die 10 umsatzstärksten Artikel je Monat (Titel ohne fortlaufende Nummer zusammengefasst), ohne Giveaways, Stornos und fehlgeschlagene Bestellungen.',
+  inputs: ['order_items'],
+  fn: (items) => {
+    const by = new Map();
+    for (const it of items) {
+      if (it.transaction_type === 'giveaway' || it.order_status === 'cancelled' || it.order_status === 'failed') continue;
+      const month = monthOf(it.created_at);
+      const title = String(it.title).replace(/#\s*\d+/g, '').replace(/\s+/g, ' ').trim() || 'ohne Titel';
+      const key = month + '|' + title;
+      const q = Number(it.quantity) || 1;
+      const g = by.get(key) || {key, month, title, revenue: 0, quantity: 0};
+      g.revenue += (Number(it.unit_price_eur) || 0) * q;
+      g.quantity += q;
+      by.set(key, g);
+    }
+    const out = [];
+    const months = d3.group([...by.values()], (g) => g.month);
+    for (const [, list] of months) {
+      list.sort((a, b) => b.revenue - a.revenue).slice(0, 10).forEach((g) => out.push({...g, revenue: r2(g.revenue)}));
+    }
+    return out;
+  },
+});
+
+dash.calc('month_customers', {
+  title: 'Top-Kunden je Monat',
+  description: 'Die 10 umsatzstärksten Kunden je Monat mit Benutzername, Käufen, Umsatz und ob es der erste Kaufmonat war (ohne Giveaways, Stornos und fehlgeschlagene Bestellungen).',
+  inputs: ['orders'],
+  fn: (orders) => {
+    const first = new Map();
+    const by = new Map();
+    for (const o of orders) {
+      if (!o.buyer_key || o.transaction_type === 'giveaway' || !OK_ORDER(o)) continue;
+      const month = monthOf(o.created_at);
+      if (!first.has(o.buyer_key) || month < first.get(o.buyer_key)) first.set(o.buyer_key, month);
+      const key = month + '|' + o.buyer_key;
+      const g = by.get(key) || {key, month, buyer_key: o.buyer_key, username: '', name: '', orders: 0, revenue: 0};
+      if (o.buyer_username) g.username = o.buyer_username;
+      if (o.buyer_name) g.name = o.buyer_name;
+      g.orders += 1;
+      g.revenue += Number(o.subtotal_eur) || 0;
+      by.set(key, g);
+    }
+    const out = [];
+    for (const [, list] of d3.group([...by.values()], (g) => g.month)) {
+      list.sort((a, b) => b.revenue - a.revenue).slice(0, 10).forEach((g) => out.push({
+        key: g.key, month: g.month, username: g.username, name: g.name, orders: g.orders,
+        revenue: r2(g.revenue), is_new: first.get(g.buyer_key) === g.month ? 'ja' : '',
+        profile_url: g.username ? 'https://www.whatnot.com/user/' + encodeURIComponent(g.username) : '',
+      }));
+    }
+    return out;
+  },
+});
+
+// ---------- Hilfen zum Zeichnen ----------
+function ready(el, ...ids) {
+  const ds = ids.map((id) => dash.data(id));
+  const bad = ds.find((d) => d.status !== 'ok');
+  if (!bad) { el.classList.remove('dash-skeleton'); return ds.map((d) => d.data); }
+  const isBody = el.tagName === 'TBODY';
+  if (bad.status === 'loading') {
+    if (!isBody) el.classList.add('dash-skeleton');
+    el.replaceChildren();
+  } else {
+    el.classList.remove('dash-skeleton');
+    el.replaceChildren();
+    if (!isBody) el.textContent = bad.status === 'error' ? 'Konnte nicht geladen werden' : '—';
+  }
+  return null;
+}
+
+function measure(g) {
+  let m = 0;
+  g.selectAll('text').each(function () { m = Math.max(m, this.getComputedTextLength()); });
+  return m;
+}
+
+function yAxis(svg, ys, ticks, fmt) {
+  const gy = svg.append('g').attr('class', 'gc-axis').call(d3.axisLeft(ys).ticks(ticks).tickFormat(fmt).tickSize(0).tickPadding(6));
+  gy.select('.domain').remove();
+  const ml = Math.ceil(measure(gy)) + 10;
+  gy.attr('transform', `translate(${ml},0)`);
+  return ml;
+}
+
+function gridLines(svg, ys, ticks, x1, x2) {
+  svg.insert('g', ':first-child').attr('class', 'gc-grid').selectAll('line').data(ys.ticks(ticks)).join('line')
+    .attr('x1', x1).attr('x2', x2).attr('y1', (d) => ys(d)).attr('y2', (d) => ys(d));
+}
+
+function xAxis(svg, xs, data, fmtX, y0, avail) {
+  const every = Math.max(1, Math.ceil(data.length / Math.max(1, Math.floor(avail / 62))));
+  const g = svg.append('g').attr('class', 'gc-axis').attr('transform', `translate(0,${y0})`)
+    .call(d3.axisBottom(xs).tickSize(0).tickPadding(8).tickFormat((k, i) => ((data.length - 1 - i) % every === 0 ? fmtX(data[i]) : '')));
+  g.select('.domain').attr('class', 'gc-base');
+}
+
+function hover(el, svg, data, xLeft, w, h, tip, onClick) {
+  const box = document.createElement('div');
+  box.className = 'gc-tip';
+  box.hidden = true;
+  el.appendChild(box);
+  const band = svg.insert('rect', ':first-child').attr('y', 0).attr('height', h).attr('width', w)
+    .style('fill', 'var(--cds-chart-grid)').style('opacity', 0);
+  const hits = svg.append('g').selectAll('rect').data(data).join('rect')
+    .attr('x', xLeft).attr('width', w).attr('y', 0).attr('height', h).style('fill', 'transparent')
+    .on('pointerenter pointermove', function (ev, d) {
+      band.attr('x', xLeft(d)).style('opacity', 0.7);
+      const [title, ...lines] = tip(d);
+      const t = document.createElement('strong');
+      t.textContent = title;
+      box.replaceChildren(t, ...lines.map((l) => { const s = document.createElement('span'); s.textContent = l; return s; }));
+      box.hidden = false;
+      const [px, py] = d3.pointer(ev, el);
+      const bw = box.offsetWidth;
+      const left = px + 14 + bw > el.clientWidth ? px - 14 - bw : px + 14;
+      box.style.left = Math.max(0, left) + 'px';
+      box.style.top = Math.max(0, py - 12) + 'px';
+    })
+    .on('pointerleave', () => { box.hidden = true; band.style('opacity', 0); });
+  if (onClick) hits.classed('clk', true).on('click', (ev, d) => onClick(d));
+}
+
+function barChart(el, o) {
+  const W = Math.max(260, el.clientWidth), H = o.height || 260, mb = 26, mt = 10;
+  el.replaceChildren();
+  const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('role', 'img').attr('aria-label', o.aria);
+  const ymax = d3.max(o.data, (d) => d3.sum(o.keys, (k) => d[k] || 0)) || 1;
+  const ys = d3.scaleLinear().domain([0, ymax]).nice().range([H - mb, mt]);
+  const ml = yAxis(svg, ys, 4, o.fmtY);
+  gridLines(svg, ys, 4, ml, W);
+  const xs = d3.scaleBand().domain(o.data.map((d) => d[o.x])).range([ml + 4, W - 2])
+    .paddingInner(o.data.length > 40 ? 0.12 : 0.25).paddingOuter(0.1);
+  xAxis(svg, xs, o.data, o.fmtX, H - mb, W - ml);
+  const st = d3.stack().keys(o.keys).value((d, k) => d[k] || 0)(o.data);
+  svg.append('g').selectAll('g').data(st).join('g').style('fill', (s, i) => o.colors[i])
+    .selectAll('rect').data((s) => s).join('rect')
+    .attr('x', (d) => xs(d.data[o.x])).attr('width', xs.bandwidth())
+    .attr('y', (d) => ys(d[1])).attr('height', (d) => Math.max(0, ys(d[0]) - ys(d[1])));
+  const step = xs.step();
+  hover(el, svg, o.data, (d) => xs(d[o.x]) - step * xs.paddingInner() / 2, step, H - mb, o.tip, o.onClick);
+}
+
+function lineChart(el, o) {
+  const W = Math.max(260, el.clientWidth), H = o.height || 190, mb = 26, mt = 12;
+  el.replaceChildren();
+  const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('role', 'img').attr('aria-label', o.aria);
+  const pts = o.data.filter((d) => d[o.y] != null);
+  const ys = d3.scaleLinear().domain([0, d3.max(pts, (d) => d[o.y]) || 1]).nice().range([H - mb, mt]);
+  const ml = yAxis(svg, ys, 4, o.fmtY);
+  gridLines(svg, ys, 4, ml, W);
+  const xs = d3.scalePoint().domain(o.data.map((d) => d[o.x])).range([ml + 10, W - 14]).padding(0);
+  xAxis(svg, xs, o.data, o.fmtX, H - mb, W - ml);
+  svg.append('path').datum(pts).attr('d', d3.line().x((d) => xs(d[o.x])).y((d) => ys(d[o.y])))
+    .style('fill', 'none').style('stroke', o.color).style('stroke-width', 2);
+  svg.append('g').selectAll('circle').data(pts).join('circle')
+    .attr('cx', (d) => xs(d[o.x])).attr('cy', (d) => ys(d[o.y])).attr('r', (d, i) => (i === pts.length - 1 ? 4 : 2.5))
+    .style('fill', o.color);
+  const step = o.data.length > 1 ? xs.step() : W - ml;
+  hover(el, svg, o.data, (d) => xs(d[o.x]) - step / 2, step, H - mb, o.tip);
+}
+
+function hbars(el, rows, o) {
+  el.replaceChildren();
+  const max = d3.max(rows, (r) => r[o.value]) || 1;
+  rows.forEach((r, i) => {
+    const row = document.createElement('div');
+    row.className = 'gc-hrow';
+    const lab = document.createElement('span');
+    lab.className = 'lab';
+    lab.textContent = r[o.label];
+    lab.title = r[o.label];
+    const track = document.createElement('div');
+    track.className = 'gc-track';
+    const fill = document.createElement('div');
+    fill.className = 'gc-fill';
+    fill.style.width = (r[o.value] / max * 100) + '%';
+    fill.style.background = o.color;
+    track.appendChild(fill);
+    const val = document.createElement('span');
+    val.className = 'val';
+    val.textContent = (o.fmt || F.int)(r[o.value]);
+    val.dataset.source = o.source;
+    val.dataset.field = o.value;
+    val.dataset.row = String(i);
+    row.append(lab, track, val);
+    el.appendChild(row);
+  });
+}
+
+function fillTable(tbody, rows, key, cols) {
+  tbody.replaceChildren(...rows.map((r) => {
+    const tr = document.createElement('tr');
+    tr.dataset.key = encodeURIComponent(r[key]);
+    for (const c of cols) {
+      const td = document.createElement('td');
+      if (c.cls) td.className = c.cls;
+      if (c.link) {
+        const a = document.createElement('a');
+        a.href = r[c.link];
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = c.text ? c.text(r) : r[c.field];
+        td.appendChild(a);
+      } else {
+        const v = r[c.field];
+        td.textContent = v == null || v === '' ? '—' : (c.fmt ? c.fmt(v, r) : v);
+      }
+      tr.appendChild(td);
+    }
+    return tr;
+  }));
+}
+
+// ---------- Legenden-Farben und Hinweis-Rahmen ----------
+dash.onData(() => {
+  document.querySelectorAll('.gc-sw[data-i]').forEach((s) => { s.style.background = dash.colors[Number(s.dataset.i)] || ''; });
+  const k = dash.data('kpi');
+  const open = k.status === 'ok' && k.data && k.data[0] ? k.data[0].open_shipments : 0;
+  document.querySelectorAll('[data-attn]').forEach((c) => c.classList.toggle('is-attn', open > 0));
+});
+
+// ---------- Kopf und Kacheln ----------
+const kpiDraw = (name, fmt) => dash.draw(name, (el) => {
+  const d = ready(el, 'kpi');
+  if (!d) return;
+  const row = d[0][0];
+  el.textContent = fmt(row);
+});
+kpiDraw('asof', (r) => F.date(r.window_end));
+kpiDraw('tw-sales', (r) => F.eur(r.sales_30));
+kpiDraw('tw-orders', (r) => F.int(r.orders_30));
+kpiDraw('tw-pct', (r) => (r.change_abs_pct == null ? '—' : F.dec1(r.change_abs_pct) + ' %'));
+kpiDraw('tw-dir', (r) => (r.change_pct == null ? '' : r.change_pct >= 0 ? 'mehr' : 'weniger'));
+kpiDraw('k-sales', (r) => F.eur(r.sales_30));
+kpiDraw('k-orders', (r) => F.int(r.orders_30));
+kpiDraw('k-orders-prev', (r) => F.int(r.orders_prev_30));
+kpiDraw('k-aov', (r) => (r.avg_order_30 == null ? '—' : F.eur2(r.avg_order_30)));
+kpiDraw('k-shows', (r) => F.int(r.shows_30));
+kpiDraw('k-next', (r) => (r.next_show ? F.showTime(r.next_show) : 'keine'));
+kpiDraw('k-open', (r) => F.int(r.open_shipments));
+kpiDraw('k-due', (r) => (r.next_dropoff ? F.date(r.next_dropoff) : '—'));
+kpiDraw('k-products', (r) => F.int(r.products_total));
+dash.draw('k-delta', (el) => {
+  const d = ready(el, 'kpi');
+  if (!d) return;
+  const c = d[0][0].change_pct;
+  el.classList.toggle('is-good', c != null && c >= 0);
+  el.classList.toggle('is-bad', c != null && c < 0);
+  el.textContent = c == null ? '—' : (c >= 0 ? '+' : '−') + F.dec1(Math.abs(c)) + ' %';
+});
+
+// ---------- Zu tun ----------
+dash.draw('ship-status', (el) => {
+  const d = ready(el, 'ship_status');
+  if (!d) return;
+  const tone = {created: 'is-warn', failed: 'is-bad', delivered: 'is-ok'};
+  el.replaceChildren(...d[0].map((r, i) => {
+    const p = document.createElement('span');
+    p.className = 'gc-pill ' + (tone[r.status] || '');
+    const b = document.createElement('b');
+    b.textContent = F.int(r.count);
+    b.dataset.source = 'ship_status';
+    b.dataset.field = 'count';
+    b.dataset.row = String(i);
+    p.append(document.createTextNode(r.label), b);
+    return p;
+  }));
+});
+dash.draw('tb-next', (el) => {
+  const d = ready(el, 'next_shows');
+  if (!d) return;
+  fillTable(el, d[0], 'show_id', [
+    {field: 'scheduled_start_at', fmt: (v) => F.showTime(v), cls: 'nw'},
+    {field: 'title', link: 'url', text: (r) => r.title},
+  ]);
+});
+
+// ---------- Umsatz ----------
+dash.draw('ch-monthly', (el) => {
+  const d = ready(el, 'monthly');
+  if (!d) return;
+  barChart(el, {
+    data: d[0], x: 'month', keys: ['buy_it_now', 'auction', 'giveaway'], colors: dash.colors,
+    fmtY: (v) => F.eur(v), fmtX: (r) => F.mon(r.month), height: 280,
+    aria: 'Balkendiagramm: Warenwert pro Monat, aufgeteilt nach Sofortkauf, Auktion und Giveaway',
+    tip: (r) => [F.monLong(r.month), 'Gesamt: ' + F.eur(r.total), 'Sofortkauf: ' + F.eur(r.buy_it_now),
+      'Auktion: ' + F.eur(r.auction), 'Giveaway: ' + F.eur(r.giveaway), 'Bestellungen: ' + F.int(r.orders), 'Klicken für Details'],
+    onClick: (r) => selectMonth(r.month, true),
+  });
+});
+
+// ---------- Shows ----------
+dash.draw('ch-shows', (el) => {
+  const d = ready(el, 'show_perf');
+  if (!d) return;
+  barChart(el, {
+    data: d[0], x: 'show_id', keys: ['sales'], colors: [dash.colors[0]],
+    fmtY: (v) => F.eur(v), fmtX: (r) => F.dateShort(r.start_time), height: 260,
+    aria: 'Balkendiagramm: Umsatz jeder Show in zeitlicher Reihenfolge',
+    tip: (r) => [r.title, F.showTime(r.start_time), 'Umsatz: ' + F.eur2(r.sales), 'Bestellungen: ' + F.int(r.orders),
+      'Käufer: ' + F.int(r.buyers), 'Zuschauer max.: ' + F.int(r.peak_viewers),
+      'Dauer: ' + F.int(r.stream_minutes) + ' Min.' + (r.sales_per_hour ? ' · ' + F.eur(r.sales_per_hour) + ' / Std.' : '')],
+  });
+});
+dash.draw('tb-top', (el) => {
+  const d = ready(el, 'show_perf');
+  if (!d) return;
+  const rows = d[0].slice().sort((a, b) => b.sales - a.sales).slice(0, 10);
+  fillTable(el, rows, 'show_id', [
+    {field: 'start_time', fmt: (v) => F.dateShort(v), cls: 'nw'},
+    {field: 'title', cls: 'gc-t'},
+    {field: 'sales', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'orders', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'sales_per_hour', fmt: (v) => F.eur(v), cls: 'num'},
+  ]);
+});
+dash.draw('tb-recent', (el) => {
+  const d = ready(el, 'show_perf');
+  if (!d) return;
+  const rows = d[0].slice(-10).reverse();
+  fillTable(el, rows, 'show_id', [
+    {field: 'start_time', fmt: (v) => F.dateShort(v), cls: 'nw'},
+    {field: 'sales', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'orders', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'buyers', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'peak_viewers', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'stream_minutes', fmt: (v) => F.int(v), cls: 'num'},
+  ]);
+});
+
+// ---------- Publikum ----------
+dash.draw('ch-peak', (el) => {
+  const d = ready(el, 'audience_monthly');
+  if (!d) return;
+  lineChart(el, {
+    data: d[0], x: 'month', y: 'avg_peak', color: dash.colors[0],
+    fmtY: (v) => F.int(v), fmtX: (r) => F.mon(r.month),
+    aria: 'Liniendiagramm: durchschnittliche Spitzenzuschauer je Show pro Monat',
+    tip: (r) => [F.monLong(r.month), 'Ø Zuschauer max.: ' + F.dec1(r.avg_peak), 'Shows: ' + F.int(r.shows)],
+  });
+});
+dash.draw('ch-ctr', (el) => {
+  const d = ready(el, 'audience_monthly');
+  if (!d) return;
+  lineChart(el, {
+    data: d[0], x: 'month', y: 'avg_ctr', color: dash.colors[1],
+    fmtY: (v) => F.int(v) + ' %', fmtX: (r) => F.mon(r.month),
+    aria: 'Liniendiagramm: durchschnittliche Klickrate der Show-Vorschau pro Monat',
+    tip: (r) => [F.monLong(r.month), 'Ø Klickrate: ' + (r.avg_ctr == null ? '—' : F.dec1(r.avg_ctr) + ' %'), 'Shows: ' + F.int(r.shows)],
+  });
+});
+dash.draw('ch-buyers', (el) => {
+  const d = ready(el, 'audience_monthly');
+  if (!d) return;
+  barChart(el, {
+    data: d[0], x: 'month', keys: ['returning_buyers', 'new_buyers'], colors: dash.colors,
+    fmtY: (v) => F.int(v), fmtX: (r) => F.mon(r.month), height: 200,
+    aria: 'Balkendiagramm: Stamm- und Neukäufer pro Monat',
+    tip: (r) => [F.monLong(r.month), 'Stammkäufer: ' + F.int(r.returning_buyers), 'Neukäufer: ' + F.int(r.new_buyers), 'Shows: ' + F.int(r.shows)],
+  });
+});
+
+// ---------- Versand und Sortiment ----------
+dash.draw('ch-service', (el) => {
+  const d = ready(el, 'ship_service');
+  if (!d) return;
+  hbars(el, d[0], {label: 'label', value: 'count', color: dash.colors[0], source: 'ship_service'});
+});
+dash.draw('ch-cat', (el) => {
+  const d = ready(el, 'categories');
+  if (!d) return;
+  hbars(el, d[0], {label: 'category', value: 'count', color: dash.colors[1], source: 'categories'});
+});
+
+dash.calc('product_formats', {
+  title: 'Produkte nach Verkaufsformat',
+  description: 'Anzahl der Produkte je Verkaufsformat und wie viele davon gerade einer Show zugeordnet sind.',
+  inputs: ['products'],
+  fn: (products) => {
+    const labels = {buy_it_now: 'Sofortkauf', auction: 'Auktion', giveaway: 'Giveaway', ohne: 'Ohne Format'};
+    const counts = {};
+    let inShows = 0;
+    for (const p of products) {
+      counts[p.sale_format] = (counts[p.sale_format] || 0) + 1;
+      if (p.active_in_shows === 'yes') inShows += 1;
+    }
+    const rows = Object.entries(counts).map(([format, count]) => ({format, label: labels[format] || format, count}))
+      .sort((a, b) => b.count - a.count);
+    rows.push({format: 'in_show', label: 'davon aktuell in einer Show', count: inShows});
+    return rows;
+  },
+});
+dash.draw('ch-format', (el) => {
+  const d = ready(el, 'product_formats');
+  if (!d) return;
+  hbars(el, d[0], {label: 'label', value: 'count', color: dash.colors[2] || dash.colors[0], source: 'product_formats'});
+});
+
+// ================= Finanzen =================
+dash.calc('finance_monthly', {
+  title: 'Finanzen pro Monat',
+  description: 'Artikelwert, Gebühren, Gutscheine, selbst getragener Versand, Trinkgeld und Netto-Gutschrift je Monat aus dem Finanzbericht.',
+  inputs: ['finance'],
+  fn: (finance) => {
+    const byMonth = new Map();
+    for (const f of finance) {
+      const d = new Date(String(f.transaction_completed_at_utc).slice(0, 19).replace(' ', 'T') + 'Z');
+      if (isNaN(d)) continue;
+      const month = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      const m = byMonth.get(month) || {month, item_value: 0, commission: 0, processing: 0, coupons: 0, shipping: 0, tips: 0, net: 0};
+      const n = (k) => Number(f[k]) || 0;
+      m.net += n('transaction_amount');
+      if (f.transaction_type === 'ORDER_EARNINGS') {
+        m.item_value += n('original_item_price');
+        m.commission += n('commission_fee') + n('commission_tax');
+        m.processing += n('processing_fee') + n('processing_fee_tax');
+        m.coupons += -n('coupon_cost');
+        m.shipping += n('seller_shipping_charge');
+      } else if (f.transaction_type === 'TIP') {
+        m.tips += n('transaction_amount');
+      } else if (f.transaction_type === 'SHIPPING_CHARGE') {
+        m.shipping += -n('transaction_amount');
+      }
+      byMonth.set(month, m);
+    }
+    const r = (v) => Math.round(v * 100) / 100;
+    return [...byMonth.values()].sort((a, b) => (a.month < b.month ? -1 : 1)).map((m) => {
+      const fees = m.commission + m.processing;
+      return {
+        month: m.month, item_value: r(m.item_value), commission: r(m.commission), processing: r(m.processing),
+        coupons: r(m.coupons), shipping: r(m.shipping), tips: r(m.tips), fees: r(fees),
+        fee_rate_pct: m.item_value ? Math.round(fees / m.item_value * 1000) / 10 : null, net: r(m.net),
+      };
+    });
+  },
+});
+
+dash.calc('finance_kpi', {
+  title: 'Finanzen gesamt',
+  description: 'Summen aus dem Finanzbericht über den gesamten verfügbaren Zeitraum.',
+  inputs: ['finance_monthly'],
+  fn: (months) => {
+    const sum = (k) => Math.round(months.reduce((s, m) => s + (m[k] || 0), 0) * 100) / 100;
+    const item = sum('item_value'), fees = sum('fees');
+    return [{
+      first_month: months.length ? months[0].month : null,
+      item_value: item, fees, fee_rate_pct: item ? Math.round(fees / item * 1000) / 10 : null,
+      seller_costs: Math.round((sum('coupons') + sum('shipping')) * 100) / 100, tips: sum('tips'), net: sum('net'),
+    }];
+  },
+});
+
+dash.calc('countries', {
+  title: 'Bestellungen nach Käuferland',
+  description: 'Anzahl der Käufe (ohne Giveaways) je Land der Käufer laut Finanzbericht.',
+  inputs: ['finance'],
+  fn: (finance) => {
+    const names = {DE: 'Deutschland', AT: 'Österreich', CH: 'Schweiz', PL: 'Polen', SE: 'Schweden', HR: 'Kroatien',
+      FR: 'Frankreich', NL: 'Niederlande', BE: 'Belgien', IT: 'Italien', ES: 'Spanien', CZ: 'Tschechien',
+      DK: 'Dänemark', LU: 'Luxemburg', HU: 'Ungarn', SK: 'Slowakei', SI: 'Slowenien', FI: 'Finnland', IE: 'Irland', PT: 'Portugal'};
+    const counts = {};
+    for (const f of finance) {
+      if (f.transaction_type !== 'ORDER_EARNINGS' || f.buy_format === 'GIVEAWAY') continue;
+      const c = f.buyer_country || '';
+      counts[c] = (counts[c] || 0) + 1;
+    }
+    return Object.entries(counts)
+      .map(([country, orders]) => ({country, country_name: country ? (names[country] || country) : 'unbekannt', orders}))
+      .sort((a, b) => b.orders - a.orders);
+  },
+});
+
+// ================= Bestseller =================
+dash.calc('bestsellers', {
+  title: 'Bestseller',
+  description: 'Die 15 umsatzstärksten Artikel (gleiche Titel mit fortlaufender Nummer zusammengefasst), ohne Giveaways, Stornos und fehlgeschlagene Bestellungen.',
+  inputs: ['order_items'],
+  fn: (items) => {
+    const groups = new Map();
+    for (const it of items) {
+      if (it.transaction_type === 'giveaway' || it.order_status === 'cancelled' || it.order_status === 'failed') continue;
+      const title = String(it.title).replace(/#\s*\d+/g, '').replace(/\s+/g, ' ').trim() || 'ohne Titel';
+      const q = Number(it.quantity) || 1, price = Number(it.unit_price_eur) || 0;
+      const g = groups.get(title) || {title, revenue: 0, quantity: 0};
+      g.revenue += price * q;
+      g.quantity += q;
+      groups.set(title, g);
+    }
+    return [...groups.values()]
+      .sort((a, b) => b.revenue - a.revenue).slice(0, 15)
+      .map((g) => ({title: g.title, revenue: Math.round(g.revenue * 100) / 100, quantity: g.quantity,
+        avg_price: Math.round(g.revenue / g.quantity * 100) / 100}));
+  },
+});
+
+dash.calc('price_buckets', {
+  title: 'Verkäufe nach Preisklasse',
+  description: 'Anzahl und Umsatz verkaufter Artikel je Preisklasse, ohne Giveaways, Stornos und fehlgeschlagene Bestellungen.',
+  inputs: ['order_items'],
+  fn: (items) => {
+    const edges = [[0, 5, 'bis 5 €'], [5, 10, '5–10 €'], [10, 20, '10–20 €'], [20, 50, '20–50 €'], [50, 100, '50–100 €'], [100, Infinity, 'über 100 €']];
+    const rows = edges.map(([lo, hi, label]) => ({bucket: label, lo, items: 0, revenue: 0}));
+    for (const it of items) {
+      if (it.transaction_type === 'giveaway' || it.order_status === 'cancelled' || it.order_status === 'failed') continue;
+      const p = Number(it.unit_price_eur) || 0, q = Number(it.quantity) || 1;
+      if (p <= 0) continue;
+      const i = edges.findIndex(([lo, hi]) => p > lo && p <= hi);
+      if (i < 0) continue;
+      rows[i].items += q;
+      rows[i].revenue += p * q;
+    }
+    return rows.map((r) => ({bucket: r.bucket, items: r.items, revenue: Math.round(r.revenue * 100) / 100}));
+  },
+});
+
+// ================= Kunden =================
+dash.calc('customers_kpi', {
+  title: 'Kunden gesamt',
+  description: 'Anzahl Kunden, Wiederkaufquote, Käufe und Umsatz je Kunde sowie Umsatzanteil der treuesten 10 % (pseudonyme Kundenschlüssel, ohne Giveaways).',
+  inputs: ['orders'],
+  fn: (orders) => {
+    const buyers = new Map();
+    for (const o of orders) {
+      if (!o.buyer_key || o.transaction_type === 'giveaway' || o.status === 'cancelled' || o.status === 'failed') continue;
+      const b = buyers.get(o.buyer_key) || {n: 0, value: 0};
+      b.n += 1;
+      b.value += Number(o.subtotal_eur) || 0;
+      buyers.set(o.buyer_key, b);
+    }
+    const list = [...buyers.values()];
+    const total = list.reduce((s, b) => s + b.value, 0);
+    const repeat = list.filter((b) => b.n > 1).length;
+    const top = list.slice().sort((a, b) => b.value - a.value).slice(0, Math.ceil(list.length / 10));
+    return [{
+      buyers: list.length, repeat_buyers: repeat,
+      repeat_pct: list.length ? Math.round(repeat / list.length * 1000) / 10 : null,
+      avg_orders: list.length ? Math.round(list.reduce((s, b) => s + b.n, 0) / list.length * 10) / 10 : null,
+      avg_value: list.length ? Math.round(total / list.length * 100) / 100 : null,
+      top10_share_pct: total ? Math.round(top.reduce((s, b) => s + b.value, 0) / total * 1000) / 10 : null,
+    }];
+  },
+});
+
+dash.calc('customer_list', {
+  title: 'Alle Kunden nach Umsatz',
+  description: 'Jeder Kunde mit Whatnot-Benutzername, Anzeigename, Zahl der Käufe, Umsatz (Zwischensumme), Ø Kauf, gewonnenen Giveaways sowie erstem und letztem Kauf, absteigend nach Umsatz (ohne Stornos und fehlgeschlagene Bestellungen).',
+  inputs: ['orders'],
+  fn: (orders) => {
+    const buyers = new Map();
+    for (const o of orders) {
+      if (!o.buyer_key || o.status === 'cancelled' || o.status === 'failed') continue;
+      const b = buyers.get(o.buyer_key) || {buyer_key: o.buyer_key, username: '', name: '', orders: 0, revenue: 0, giveaways: 0, first: null, last: null, seen: ''};
+      if (o.created_at >= b.seen) {  // neuester Name gewinnt
+        b.seen = o.created_at;
+        if (o.buyer_username) b.username = o.buyer_username;
+        if (o.buyer_name) b.name = o.buyer_name;
+      }
+      if (o.transaction_type === 'giveaway') {
+        b.giveaways += 1;
+      } else {
+        b.orders += 1;
+        b.revenue += Number(o.subtotal_eur) || 0;
+        if (!b.first || o.created_at < b.first) b.first = o.created_at;
+        if (!b.last || o.created_at > b.last) b.last = o.created_at;
+      }
+      buyers.set(o.buyer_key, b);
+    }
+    return [...buyers.values()]
+      .sort((a, b) => b.revenue - a.revenue || b.orders - a.orders)
+      .map((b, i) => ({
+        rank: i + 1, buyer_key: b.buyer_key, username: b.username, name: b.name,
+        profile_url: b.username ? 'https://www.whatnot.com/user/' + encodeURIComponent(b.username) : '',
+        orders: b.orders,
+        revenue: Math.round(b.revenue * 100) / 100,
+        avg: b.orders ? Math.round(b.revenue / b.orders * 100) / 100 : null,
+        giveaways: b.giveaways, first: b.first, last: b.last,
+      }));
+  },
+});
+
+dash.calc('customer_buckets', {
+  title: 'Kunden nach Anzahl der Käufe',
+  description: 'Wie viele Kunden wie oft gekauft haben und welchen Umsatzanteil jede Gruppe bringt (ohne Giveaways).',
+  inputs: ['orders'],
+  fn: (orders) => {
+    const buyers = new Map();
+    for (const o of orders) {
+      if (!o.buyer_key || o.transaction_type === 'giveaway' || o.status === 'cancelled' || o.status === 'failed') continue;
+      const b = buyers.get(o.buyer_key) || {n: 0, value: 0};
+      b.n += 1;
+      b.value += Number(o.subtotal_eur) || 0;
+      buyers.set(o.buyer_key, b);
+    }
+    const buckets = [[1, 1, '1 Kauf'], [2, 4, '2–4 Käufe'], [5, 9, '5–9 Käufe'], [10, 24, '10–24 Käufe'], [25, Infinity, '25 und mehr']];
+    const rows = buckets.map(([lo, hi, bucket]) => ({bucket, lo, hi, buyers: 0, revenue: 0}));
+    let total = 0;
+    for (const b of buyers.values()) {
+      const r = rows.find((x) => b.n >= x.lo && b.n <= x.hi);
+      r.buyers += 1;
+      r.revenue += b.value;
+      total += b.value;
+    }
+    return rows.map((r) => ({bucket: r.bucket, buyers: r.buyers, revenue: Math.round(r.revenue * 100) / 100,
+      revenue_share_pct: total ? Math.round(r.revenue / total * 1000) / 10 : null}));
+  },
+});
+
+dash.calc('customers_monthly', {
+  title: 'Neue und wiederkehrende Kunden pro Monat',
+  description: 'Je Monat die Zahl der Kunden mit erstem Kauf und der wiederkehrenden Kunden (ohne Giveaways).',
+  inputs: ['orders'],
+  fn: (orders) => {
+    const ok = orders.filter((o) => o.buyer_key && o.transaction_type !== 'giveaway' && o.status !== 'cancelled' && o.status !== 'failed');
+    const monthOf = (s) => { const d = new Date(s); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
+    const first = new Map();
+    for (const o of ok) {
+      const m = monthOf(o.created_at);
+      if (!first.has(o.buyer_key) || m < first.get(o.buyer_key)) first.set(o.buyer_key, m);
+    }
+    const byMonth = new Map();
+    for (const o of ok) {
+      const m = monthOf(o.created_at);
+      if (!byMonth.has(m)) byMonth.set(m, new Set());
+      byMonth.get(m).add(o.buyer_key);
+    }
+    return [...byMonth.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)).map(([month, set]) => {
+      let fresh = 0;
+      for (const k of set) if (first.get(k) === month) fresh += 1;
+      return {month, new: fresh, returning: set.size - fresh, active: set.size};
+    });
+  },
+});
+
+// ================= Tageswerte und Kaufzeiten =================
+dash.calc('daily_monthly', {
+  title: 'Follower und Watchtime pro Monat',
+  description: 'Neue Follower je Monat und durchschnittliche Watchtime an Streamtagen aus Whatnots Tagesreport.',
+  inputs: ['daily'],
+  fn: (daily) => {
+    const byMonth = new Map();
+    for (const d of daily) {
+      if (!d.date) continue;
+      const month = String(d.date).slice(0, 7);
+      const m = byMonth.get(month) || {month, follows: 0, watch_sum: 0, watch_n: 0, minutes: 0};
+      m.follows += Number(d.follows_count) || 0;
+      m.minutes += Number(d.stream_minutes) || 0;
+      if ((Number(d.livestreams_count) || 0) > 0 && Number(d.average_watch_time_seconds) > 0) {
+        m.watch_sum += Number(d.average_watch_time_seconds);
+        m.watch_n += 1;
+      }
+      byMonth.set(month, m);
+    }
+    return [...byMonth.values()].filter((m) => m.follows > 0 || m.minutes > 0)
+      .sort((a, b) => (a.month < b.month ? -1 : 1))
+      .map((m) => ({month: m.month, follows: m.follows, stream_minutes: m.minutes,
+        avg_watch_min: m.watch_n ? Math.round(m.watch_sum / m.watch_n / 6) / 10 : null}));
+  },
+});
+
+dash.calc('daily_kpi', {
+  title: 'Follower gesamt',
+  description: 'Summe der neuen Follower im Tagesreport.',
+  inputs: ['daily'],
+  fn: (daily) => [{follows: daily.reduce((s, d) => s + (Number(d.follows_count) || 0), 0)}],
+});
+
+dash.calc('heat', {
+  title: 'Bestellungen nach Wochentag und Uhrzeit',
+  description: 'Anzahl der Käufe je Wochentag (Mo–So) und Stunde in der Zeitzone des Lesers, ohne Giveaways, Stornos und fehlgeschlagene Bestellungen.',
+  inputs: ['orders'],
+  fn: (orders) => {
+    const days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    const grid = [];
+    for (let w = 0; w < 7; w++) for (let h = 0; h < 24; h++) grid.push({weekday: days[w], hour: h, orders: 0, value: 0});
+    for (const o of orders) {
+      if (o.transaction_type === 'giveaway' || o.status === 'cancelled' || o.status === 'failed') continue;
+      const d = new Date(o.created_at);
+      const w = (d.getDay() + 6) % 7;
+      const cell = grid[w * 24 + d.getHours()];
+      cell.orders += 1;
+      cell.value += Number(o.subtotal_eur) || 0;
+    }
+    return grid.map((c) => ({...c, value: Math.round(c.value * 100) / 100}));
+  },
+});
+
+// ================= Zeichnen =================
+function fieldDraw(name, src, fmt) {
+  dash.draw(name, (el) => {
+    const d = ready(el, src);
+    if (!d) return;
+    el.textContent = fmt(d[0][0]);
+  });
+}
+const pct = (v) => (v == null ? '—' : F.dec1(v) + ' %');
+fieldDraw('f-start', 'finance_kpi', (r) => (r.first_month ? F.monLong(r.first_month) : '—'));
+fieldDraw('f-items', 'finance_kpi', (r) => F.eur(r.item_value));
+fieldDraw('f-fees', 'finance_kpi', (r) => F.eur(r.fees));
+fieldDraw('f-rate', 'finance_kpi', (r) => pct(r.fee_rate_pct));
+fieldDraw('f-other', 'finance_kpi', (r) => F.eur(r.seller_costs));
+fieldDraw('f-tips', 'finance_kpi', (r) => F.eur(r.tips));
+fieldDraw('f-net', 'finance_kpi', (r) => F.eur(r.net));
+fieldDraw('c-total', 'customers_kpi', (r) => F.int(r.buyers));
+fieldDraw('c-repeat', 'customers_kpi', (r) => pct(r.repeat_pct));
+fieldDraw('c-repeat-n', 'customers_kpi', (r) => F.int(r.repeat_buyers));
+fieldDraw('c-avg', 'customers_kpi', (r) => (r.avg_orders == null ? '—' : F.dec1(r.avg_orders)));
+fieldDraw('c-value', 'customers_kpi', (r) => (r.avg_value == null ? '—' : F.eur(r.avg_value)));
+fieldDraw('c-top', 'customers_kpi', (r) => pct(r.top10_share_pct));
+fieldDraw('d-follows', 'daily_kpi', (r) => F.int(r.follows));
+
+dash.draw('ch-fees', (el) => {
+  const d = ready(el, 'finance_monthly');
+  if (!d) return;
+  barChart(el, {
+    data: d[0], x: 'month', keys: ['commission', 'processing', 'coupons', 'shipping'], colors: dash.colors,
+    fmtY: (v) => F.eur(v), fmtX: (r) => F.mon(r.month), height: 240,
+    aria: 'Balkendiagramm: Abzüge pro Monat nach Provision, Zahlungsgebühr, Gutscheinen und Versand',
+    tip: (r) => [F.monLong(r.month), 'Provision: ' + F.eur2(r.commission), 'Zahlungsgebühr: ' + F.eur2(r.processing),
+      'Gutscheine: ' + F.eur2(r.coupons), 'Versand selbst getragen: ' + F.eur2(r.shipping),
+      'Gebührenquote: ' + pct(r.fee_rate_pct), 'Netto: ' + F.eur(r.net)],
+  });
+});
+dash.draw('tb-fin', (el) => {
+  const d = ready(el, 'finance_monthly');
+  if (!d) return;
+  fillTable(el, d[0].slice().reverse(), 'month', [
+    {field: 'month', fmt: (v) => F.monLong(v), cls: 'nw'},
+    {field: 'item_value', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'fees', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'fee_rate_pct', fmt: (v) => pct(v), cls: 'num'},
+    {field: 'net', fmt: (v) => F.eur(v), cls: 'num'},
+  ]);
+});
+dash.draw('ch-countries', (el) => {
+  const d = ready(el, 'countries');
+  if (!d) return;
+  hbars(el, d[0].slice(0, 8), {label: 'country_name', value: 'orders', color: dash.colors[0], source: 'countries'});
+});
+
+dash.draw('tb-best', (el) => {
+  const d = ready(el, 'bestsellers');
+  if (!d) return;
+  fillTable(el, d[0], 'title', [
+    {field: 'title', cls: 'gc-t'},
+    {field: 'revenue', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'quantity', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'avg_price', fmt: (v) => F.eur2(v), cls: 'num'},
+  ]);
+});
+dash.draw('ch-prices', (el) => {
+  const d = ready(el, 'price_buckets');
+  if (!d) return;
+  barChart(el, {
+    data: d[0], x: 'bucket', keys: ['items'], colors: [dash.colors[0]],
+    fmtY: (v) => F.int(v), fmtX: (r) => r.bucket, height: 190,
+    aria: 'Balkendiagramm: Anzahl verkaufter Artikel je Preisklasse',
+    tip: (r) => [r.bucket, 'Artikel: ' + F.int(r.items), 'Umsatz: ' + F.eur(r.revenue)],
+  });
+});
+dash.draw('ch-price-rev', (el) => {
+  const d = ready(el, 'price_buckets');
+  if (!d) return;
+  hbars(el, d[0], {label: 'bucket', value: 'revenue', color: dash.colors[1], source: 'price_buckets', fmt: F.eur});
+});
+
+dash.draw('tb-cust', (el) => {
+  const d = ready(el, 'customer_buckets');
+  if (!d) return;
+  fillTable(el, d[0], 'bucket', [
+    {field: 'bucket', cls: 'nw'},
+    {field: 'buyers', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'revenue', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'revenue_share_pct', fmt: (v) => pct(v), cls: 'num'},
+  ]);
+});
+function filterCustomers() {
+  const box = document.getElementById('cust-search');
+  const tb = document.querySelector('[data-draw="tb-cust-list"]');
+  if (!box || !tb) return;
+  const q = box.value.trim().toLowerCase();
+  for (const tr of tb.rows) tr.hidden = q !== '' && !tr.textContent.toLowerCase().includes(q);
+}
+document.getElementById('cust-search')?.addEventListener('input', filterCustomers);
+dash.draw('tb-cust-list', (el) => {
+  const d = ready(el, 'customer_list');
+  if (!d) return;
+  fillTable(el, d[0], 'buyer_key', [
+    {field: 'rank', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'username', link: 'profile_url', text: (r) => r.username || '—', cls: 'nw'},
+    {field: 'name', cls: 'nw'},
+    {field: 'orders', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'revenue', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'avg', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'giveaways', fmt: (v) => (v ? F.int(v) : '—'), cls: 'num'},
+    {field: 'first', fmt: (v) => F.dateShort(v), cls: 'nw'},
+    {field: 'last', fmt: (v) => F.dateShort(v), cls: 'nw'},
+  ]);
+  filterCustomers();
+});
+dash.draw('ch-cust-month', (el) => {
+  const d = ready(el, 'customers_monthly');
+  if (!d) return;
+  barChart(el, {
+    data: d[0], x: 'month', keys: ['returning', 'new'], colors: dash.colors,
+    fmtY: (v) => F.int(v), fmtX: (r) => F.mon(r.month), height: 200,
+    aria: 'Balkendiagramm: neue und wiederkehrende Kunden pro Monat',
+    tip: (r) => [F.monLong(r.month), 'Aktive Kunden: ' + F.int(r.active), 'davon erster Kauf: ' + F.int(r.new), 'wiederkehrend: ' + F.int(r.returning)],
+  });
+});
+
+dash.draw('ch-follows', (el) => {
+  const d = ready(el, 'daily_monthly');
+  if (!d) return;
+  barChart(el, {
+    data: d[0], x: 'month', keys: ['follows'], colors: [dash.colors[2] || dash.colors[0]],
+    fmtY: (v) => F.int(v), fmtX: (r) => F.mon(r.month), height: 190,
+    aria: 'Balkendiagramm: neue Follower pro Monat',
+    tip: (r) => [F.monLong(r.month), 'Neue Follower: ' + F.int(r.follows), 'Stream-Minuten: ' + F.int(r.stream_minutes)],
+  });
+});
+dash.draw('ch-watch', (el) => {
+  const d = ready(el, 'daily_monthly');
+  if (!d) return;
+  lineChart(el, {
+    data: d[0], x: 'month', y: 'avg_watch_min', color: dash.colors[3] || dash.colors[0],
+    fmtY: (v) => F.int(v) + ' Min.', fmtX: (r) => F.mon(r.month),
+    aria: 'Liniendiagramm: durchschnittliche Watchtime pro Zuschauer in Minuten',
+    tip: (r) => [F.monLong(r.month), 'Ø Watchtime: ' + (r.avg_watch_min == null ? '—' : F.dec1(r.avg_watch_min) + ' Min.')],
+  });
+});
+
+dash.draw('ch-heat', (el) => {
+  const d = ready(el, 'heat');
+  if (!d) return;
+  const rows = d[0];
+  const used = rows.filter((r) => r.orders > 0).map((r) => r.hour);
+  el.replaceChildren();
+  if (!used.length) { el.textContent = 'Keine Käufe im Zeitraum'; return; }
+  const hMin = Math.min(...used), hMax = Math.max(...used);
+  const hours = d3.range(hMin, hMax + 1);
+  const max = d3.max(rows, (r) => r.orders) || 1;
+  el.style.gridTemplateColumns = `auto repeat(${hours.length}, minmax(28px, 1fr))`;
+  el.appendChild(document.createElement('span'));
+  for (const h of hours) {
+    const s = document.createElement('span');
+    s.className = 'hd';
+    s.textContent = h + ' Uhr';
+    el.appendChild(s);
+  }
+  const tip = document.createElement('div');
+  tip.className = 'gc-tip';
+  tip.hidden = true;
+  ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].forEach((day, w) => {
+    const lab = document.createElement('span');
+    lab.className = 'rl';
+    lab.textContent = day;
+    el.appendChild(lab);
+    for (const h of hours) {
+      const idx = w * 24 + h;
+      const r = rows[idx];
+      const ratio = r.orders / max;
+      const cell = document.createElement('div');
+      cell.className = 'cell' + (ratio > 0.55 ? ' is-strong' : '');
+      const fill = document.createElement('i');
+      fill.style.background = dash.colors[0];
+      fill.style.opacity = r.orders ? String(0.12 + 0.88 * ratio) : '0';
+      const v = document.createElement('span');
+      v.textContent = r.orders ? F.int(r.orders) : '';
+      v.dataset.source = 'heat';
+      v.dataset.field = 'orders';
+      v.dataset.row = String(idx);
+      cell.append(fill, v);
+      cell.addEventListener('pointerenter', () => {
+        const t = document.createElement('strong');
+        t.textContent = `${day}, ${h}–${h + 1} Uhr`;
+        const a = document.createElement('span');
+        a.textContent = 'Bestellungen: ' + F.int(r.orders);
+        const b = document.createElement('span');
+        b.textContent = 'Warenwert: ' + F.eur(r.value);
+        tip.replaceChildren(t, a, b);
+        tip.hidden = false;
+        const er = el.getBoundingClientRect(), cr = cell.getBoundingClientRect();
+        let left = cr.left - er.left + el.scrollLeft + cr.width + 6;
+        if (left + tip.offsetWidth > el.scrollLeft + el.clientWidth) left = cr.left - er.left + el.scrollLeft - tip.offsetWidth - 6;
+        tip.style.left = Math.max(0, left) + 'px';
+        tip.style.top = (cr.top - er.top) + 'px';
+      });
+      cell.addEventListener('pointerleave', () => { tip.hidden = true; });
+      el.appendChild(cell);
+    }
+  });
+  el.appendChild(tip);
+});
+
+// ================= Sendungen prüfen (Zeichnen) =================
+let shipFilter = 'problem';
+const shipOpen = new Set();
+const SHIP_CAP = 300;
+const mk = (tag, cls, text) => {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+};
+const link = (href, text) => {
+  const a = mk('a', '', text);
+  a.href = href;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  return a;
+};
+
+function shipDetail(r) {
+  const wrap = mk('div', 'gc-det');
+  const block = (title, pairs) => {
+    const b = mk('div');
+    b.appendChild(mk('h4', '', title));
+    const dl = mk('dl');
+    for (const [k, v] of pairs) {
+      if (v == null || v === '') continue;
+      dl.appendChild(mk('dt', '', k));
+      const dd = mk('dd');
+      if (v instanceof Node) dd.appendChild(v); else dd.textContent = v;
+      dl.appendChild(dd);
+    }
+    b.appendChild(dl);
+    return b;
+  };
+  wrap.appendChild(block('Sendung', [
+    ['Hinweis', r.problem || r.replaced || 'kein Problem erkannt'],
+    ['Status', r.status_label],
+    ['Versandart', r.service_label],
+    ['Trackingnummer', r.tracking_code ? link(r.tracking_url, r.tracking_code) : 'keine'],
+    ['Gewicht', r.weight_g != null ? F.int(r.weight_g) + ' g' : ''],
+    ['Maße', r.dims ? r.dims.map((d) => F.dec1(d).replace(',0', '')).join(' × ') + ' cm' : ''],
+    ['Abgabe bis', r.dropoff_due ? F.showTime(r.dropoff_due) : ''],
+    ['Erstellt', F.showTime(r.created_at)],
+    ['Zuletzt geändert', r.updated_at ? F.showTime(r.updated_at) : ''],
+    ['Versand selbst bezahlt', r.seller_paid ? F.eur2(r.seller_paid) : ''],
+    ['Ersatzsendung', r.replacement_shipment_id],
+    ['Sendungs-ID', r.shipment_id],
+    ['Whatnot', r.url ? link(r.url, 'Sendung bei Whatnot öffnen') : ''],
+  ]));
+  wrap.appendChild(block('Empfänger', [
+    ['Benutzername', r.buyer_username ? link(r.profile_url, r.buyer_username) : '—'],
+    ['Name', r.buyer_name],
+  ]));
+  const itemsBox = mk('div');
+  itemsBox.appendChild(mk('h4', '', `Artikel (${F.int(r.item_count)}) · ${F.eur2(r.item_value)}`));
+  const ul = mk('ul');
+  for (const it of r.items) ul.appendChild(mk('li', '', `${it.quantity > 1 ? it.quantity + ' × ' : ''}${it.title} – ${F.eur2(it.price)}`));
+  if (!r.items.length) ul.appendChild(mk('li', '', 'keine Artikel zugeordnet'));
+  itemsBox.appendChild(ul);
+  itemsBox.appendChild(mk('h4', '', `Bestellungen (${r.orders.length})`)).style.marginTop = '10px';
+  const ol = mk('ul');
+  const ST = {completed: 'abgeschlossen', cancelled: 'storniert', failed: 'fehlgeschlagen', pending: 'offen', processing: 'in Bearbeitung'};
+  const TT = {buy_it_now: 'Sofortkauf', auction: 'Auktion', giveaway: 'Giveaway'};
+  for (const o of r.orders) ol.appendChild(mk('li', '', `${F.showTime(o.created_at)} · ${TT[o.type] || o.type || ''} · ${ST[o.status] || o.status} · ${F.eur2(o.total)}`));
+  itemsBox.appendChild(ol);
+  wrap.appendChild(itemsBox);
+  return wrap;
+}
+
+function shipRows(all) {
+  const q = (document.getElementById('ship-search')?.value || '').trim().toLowerCase();
+  let rows = all.filter((r) => (shipFilter === 'problem' ? r.severity > 0 : shipFilter === 'open' ? r.is_open : true));
+  if (q) rows = rows.filter((r) => r.search.includes(q));
+  return rows;
+}
+function renderShipMore(el) {
+  const d = ready(el, 'ship_list');
+  if (!d) return;
+  const n = shipRows(d[0]).length;
+  el.textContent = n > SHIP_CAP ? `Es werden die ersten ${SHIP_CAP} von ${F.int(n)} Sendungen gezeigt. Mit der Suche findest du jede Sendung.` : (n ? '' : 'Keine Sendungen in dieser Auswahl.');
+}
+function refreshShips() {
+  document.querySelectorAll('[data-draw="tb-ship"]').forEach(renderShips);
+  document.querySelectorAll('[data-draw="ship-more"]').forEach(renderShipMore);
+}
+function renderShips(el) {
+  const d = ready(el, 'ship_list');
+  if (!d) return;
+  const rows = shipRows(d[0]);
+  const out = [];
+  for (const r of rows.slice(0, SHIP_CAP)) {
+    const tr = mk('tr', 'row');
+    tr.dataset.key = encodeURIComponent(r.shipment_id);
+    const open = shipOpen.has(r.shipment_id);
+    const tog = mk('td', 'tog');
+    const btn = mk('button', '', open ? '▾' : '▸');
+    btn.type = 'button';
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', 'Details anzeigen');
+    tog.appendChild(btn);
+    tr.appendChild(tog);
+    const hint = mk('td');
+    if (r.problem) hint.appendChild(mk('span', 'gc-flag ' + (r.severity > 1 ? 'is-bad' : 'is-warn'), r.problem));
+    else hint.textContent = r.is_open ? 'abgeben' : r.replaced || '—';
+    tr.appendChild(hint);
+    tr.appendChild(mk('td', 'nw', F.dateShort(r.created_at)));
+    const who = mk('td', 'nw', r.buyer_username || '—');
+    if (r.buyer_name) who.title = r.buyer_name;
+    tr.appendChild(who);
+    tr.appendChild(mk('td', 'num', F.int(r.item_count)));
+    tr.appendChild(mk('td', 'num', F.eur2(r.item_value)));
+    tr.appendChild(mk('td', 'nw', r.service_label));
+    tr.appendChild(mk('td', 'nw', r.status_label));
+    tr.addEventListener('click', (ev) => {
+      if (ev.target.closest('a')) return;
+      if (shipOpen.has(r.shipment_id)) shipOpen.delete(r.shipment_id); else shipOpen.add(r.shipment_id);
+      renderShips(el);
+    });
+    out.push(tr);
+    if (open) {
+      const det = mk('tr', 'det');
+      const td = mk('td');
+      td.colSpan = 8;
+      td.appendChild(shipDetail(r));
+      det.appendChild(td);
+      out.push(det);
+    }
+  }
+  el.replaceChildren(...out);
+}
+dash.draw('tb-ship', renderShips);
+dash.draw('ship-more', renderShipMore);
+const shipCount = (name, pred) => dash.draw(name, (el) => {
+  const d = ready(el, 'ship_list');
+  if (!d) return;
+  el.textContent = F.int(d[0].filter(pred).length);
+});
+shipCount('ship-n-problem', (r) => r.severity > 0);
+shipCount('ship-n-open', (r) => r.is_open);
+shipCount('ship-n-all', () => true);
+document.querySelectorAll('[data-ship-filter]').forEach((b) => b.addEventListener('click', () => {
+  shipFilter = b.dataset.shipFilter;
+  document.querySelectorAll('[data-ship-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  refreshShips();
+}));
+document.getElementById('ship-search')?.addEventListener('input', refreshShips);
+
+// ================= Monat im Detail (Zeichnen) =================
+let selMonth = null;
+const MDRAW = {};
+const mdraw = (name, fn) => { MDRAW[name] = fn; dash.draw(name, fn); };
+function monthList() {
+  const d = dash.data('month_summary');
+  return d.status === 'ok' && d.data ? d.data.map((r) => r.month) : [];
+}
+function curMonth() {
+  const list = monthList();
+  return selMonth && list.includes(selMonth) ? selMonth : list[list.length - 1] || null;
+}
+function selectMonth(m, scroll) {
+  const list = monthList();
+  if (!list.length) return;
+  selMonth = list.includes(m) ? m : list[list.length - 1];
+  for (const [name, fn] of Object.entries(MDRAW)) document.querySelectorAll(`[data-draw="${name}"]`).forEach((el) => fn(el));
+  if (scroll) document.getElementById('monat')?.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+mdraw('m-nav', (el) => {
+  const d = ready(el, 'month_summary');
+  if (!d) return;
+  const list = d[0].map((r) => r.month);
+  const cm = curMonth();
+  const i = list.indexOf(cm);
+  const prev = mk('button', '', '‹');
+  prev.type = 'button';
+  prev.setAttribute('aria-label', 'Vorheriger Monat');
+  prev.disabled = i <= 0;
+  prev.addEventListener('click', () => selectMonth(list[Math.max(0, i - 1)]));
+  const sel = mk('select');
+  sel.setAttribute('aria-label', 'Monat');
+  sel.append(...list.slice().reverse().map((m) => { const o = mk('option', '', F.monLong(m)); o.value = m; return o; }));
+  if (cm) sel.value = cm;
+  sel.addEventListener('change', () => selectMonth(sel.value));
+  const next = mk('button', '', '›');
+  next.type = 'button';
+  next.setAttribute('aria-label', 'Nächster Monat');
+  next.disabled = i < 0 || i >= list.length - 1;
+  next.addEventListener('click', () => selectMonth(list[Math.min(list.length - 1, i + 1)]));
+  el.replaceChildren(prev, sel, next);
+});
+mdraw('m-title', (el) => {
+  const d = ready(el, 'month_summary');
+  if (!d) return;
+  const m = curMonth();
+  el.textContent = m ? F.monLong(m) : '—';
+});
+
+mdraw('m-tiles', (el) => {
+  const d = ready(el, 'month_summary');
+  if (!d) return;
+  const rows = d[0];
+  const cm = curMonth();
+  const i = rows.findIndex((r) => r.month === cm);
+  if (i < 0) { el.replaceChildren(); return; }
+  const r = rows[i], prev = rows[i - 1];
+  const tile = (label, field, big, sub) => {
+    const c = mk('div', 'gc-card');
+    c.appendChild(mk('div', 'gc-label', label));
+    const b = mk('div', 'gc-big', big);
+    b.dataset.source = 'month_summary';
+    b.dataset.field = field;
+    b.dataset.row = String(i);
+    c.appendChild(b);
+    const s = mk('div', 'gc-sub');
+    if (sub instanceof Node) s.appendChild(sub); else s.textContent = sub || '';
+    c.appendChild(s);
+    return c;
+  };
+  let delta = 'erster Monat';
+  if (prev && prev.sales) {
+    const ch = (r.sales / prev.sales - 1) * 100;
+    delta = mk('span');
+    const dl = mk('span', 'gc-delta ' + (ch >= 0 ? 'is-good' : 'is-bad'), (ch >= 0 ? '+' : '−') + F.dec1(Math.abs(ch)) + ' %');
+    delta.append(dl, document.createTextNode(' ggü. ' + F.monLong(prev.month)));
+  }
+  el.replaceChildren(
+    tile('Warenwert', 'sales', F.eur(r.sales), delta),
+    tile('Bestellungen', 'orders', F.int(r.orders), `davon ${F.int(r.giveaways)} Giveaways`),
+    tile('Ø Bestellwert', 'avg_order', r.avg_order == null ? '—' : F.eur2(r.avg_order), 'ohne Giveaways'),
+    tile('Kunden', 'customers', F.int(r.customers), `davon ${F.int(r.new_customers)} zum ersten Mal`),
+    tile('Shows', 'shows', F.int(r.shows), r.stream_hours ? F.dec1(r.stream_hours) + ' Stream-Stunden' : ''),
+    tile('Netto laut Finanzbericht', 'net', r.net == null ? '—' : F.eur(r.net),
+      r.fees == null ? 'Für diesen Monat kein Finanzbericht' : `Gebühren ${F.eur(r.fees)} (${F.dec1(r.fee_rate_pct)} %)`),
+  );
+});
+
+mdraw('m-days', (el) => {
+  const d = ready(el, 'month_days');
+  const selMonth = curMonth();
+  if (!d || !selMonth) return;
+  const have = new Map(d[0].filter((r) => r.month === selMonth).map((r) => [r.day, r]));
+  const [y, mo] = selMonth.split('-').map(Number);
+  const n = new Date(y, mo, 0).getDate();
+  const data = [];
+  for (let i = 1; i <= n; i++) {
+    const day = selMonth + '-' + String(i).padStart(2, '0');
+    data.push(have.get(day) || {day, month: selMonth, sales: 0, orders: 0});
+  }
+  const fmtDay = (r) => TLOC.format('%a %d.%m.')(new Date(r.day + 'T12:00:00'));
+  barChart(el, {
+    data, x: 'day', keys: ['sales'], colors: [dash.colors[0]], height: 200,
+    fmtY: (v) => F.eur(v), fmtX: (r) => String(Number(r.day.slice(8))),
+    aria: 'Balkendiagramm: Warenwert pro Tag im ' + F.monLong(selMonth),
+    tip: (r) => [fmtDay(r), 'Warenwert: ' + F.eur2(r.sales), 'Bestellungen: ' + F.int(r.orders)],
+  });
+});
+
+mdraw('m-items', (el) => {
+  const d = ready(el, 'month_items');
+  if (!d) return;
+  const rows = d[0].filter((r) => r.month === curMonth());
+  fillTable(el, rows, 'key', [
+    {field: 'title', cls: 'gc-t'},
+    {field: 'revenue', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'quantity', fmt: (v) => F.int(v), cls: 'num'},
+  ]);
+});
+
+mdraw('m-cust', (el) => {
+  const d = ready(el, 'month_customers');
+  if (!d) return;
+  const rows = d[0].filter((r) => r.month === curMonth());
+  fillTable(el, rows, 'key', [
+    {field: 'username', link: 'profile_url', text: (r) => r.username || '—', cls: 'nw'},
+    {field: 'orders', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'revenue', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'is_new', fmt: (v) => v, cls: 'nw'},
+  ]);
+});
+
+function monthShows(shows) {
+  const cm = curMonth();
+  return shows.filter((s) => monthOf(s.start_time) === cm)
+    .sort((a, b) => (a.start_time < b.start_time ? -1 : 1))
+    .map((s) => {
+      const ok = s.calculation_status === 'GENERATED';
+      const sales = Number(s.sales_eur) || 0, minutes = Number(s.stream_minutes) || 0;
+      return {
+        show_id: s.show_id, start_time: s.start_time, title: s.title,
+        sales: ok ? sales : null, orders: ok ? Number(s.orders) || 0 : null, buyers: ok ? Number(s.buyers) || 0 : null,
+        peak_viewers: ok ? Number(s.peak_viewers) || 0 : null,
+        sales_per_hour: ok && minutes ? Math.round(sales / minutes * 60) : null,
+      };
+    });
+}
+mdraw('m-shows', (el) => {
+  const d = ready(el, 'shows');
+  if (!d) return;
+  const rows = monthShows(d[0]);
+  fillTable(el, rows, 'show_id', [
+    {field: 'start_time', fmt: (v) => F.dateShort(v), cls: 'nw'},
+    {field: 'title', cls: 'gc-t'},
+    {field: 'sales', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'orders', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'buyers', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'peak_viewers', fmt: (v) => F.int(v), cls: 'num'},
+    {field: 'sales_per_hour', fmt: (v) => F.eur(v), cls: 'num'},
+  ]);
+});
+mdraw('m-shows-note', (el) => {
+  const d = ready(el, 'shows');
+  if (!d) return;
+  const rows = monthShows(d[0]);
+  el.textContent = !rows.length ? 'In diesem Monat gab es keine öffentlichen Shows.'
+    : rows.some((r) => r.sales == null) ? 'Für einige Shows hat Whatnot noch keine Kennzahlen berechnet (—).' : '';
+});
+
+
+// ================= Steuern und Gewinn =================
+const UST_START = '{{UST_MONAT}}';
+const TAX_YEAR = '{{STEUERJAHR}}';
+const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
+dash.calc('tax_monthly', {
+  title: 'Umsatzsteuer und Gewinn pro Monat {{STEUERJAHR}}',
+  description: 'Whatnot-Verkäufe nach Bestelldatum (Finanzbericht, fehlende Bestellungen aus der Bestellliste) plus eigene Ausgangsrechnungen, Umsatzsteuer 19/119 ab Beginn der Regelbesteuerung (bei eigenen Rechnungen die ausgewiesene USt), Vorsteuer und Kosten aus den Belegen, Whatnot-Gebühren, Versand und Trinkgeld, daraus Zahllast und Gewinn.',
+  inputs: ['finance', 'orders', 'belege', 'ausgang'],
+  fn: (finance, orders, belege, ausgang) => {
+    const M = new Map();
+    const get = (m) => {
+      if (!M.has(m)) M.set(m, {month: m, revenue: 0, revenue_est: 0, direct_brutto: 0, direct_netto: 0, direct_ust: 0, fees: 0, shipping: 0, tips: 0, vorsteuer: 0, vorsteuer_pruefen: 0, belegkosten: 0});
+      return M.get(m);
+    };
+    const seen = new Set();
+    for (const f of finance) {
+      if (f.transaction_type === 'ORDER_EARNINGS') {
+        seen.add(String(f.order_id));
+        const m = String(f.order_placed_at_utc).slice(0, 7);
+        if (!m.startsWith(TAX_YEAR)) continue;
+        const r = get(m);
+        r.revenue += num(f.post_coupon_price);
+        r.fees += num(f.commission_fee) + num(f.commission_tax) + num(f.processing_fee) + num(f.processing_fee_tax);
+        r.shipping += num(f.seller_shipping_charge);
+      } else {
+        const m = String(f.transaction_completed_at_utc).slice(0, 7);
+        if (!m.startsWith(TAX_YEAR)) continue;
+        if (f.transaction_type === 'TIP') get(m).tips += num(f.transaction_amount);
+        else if (f.transaction_type === 'SHIPPING_CHARGE') get(m).shipping += -num(f.transaction_amount);
+      }
+    }
+    for (const o of orders) {
+      if (seen.has(String(o.order_id)) || o.transaction_type === 'giveaway' || o.cancelled_at || o.status === 'failed' || o.status === 'cancelled') continue;
+      const m = String(o.created_at).slice(0, 7);
+      if (!m.startsWith(TAX_YEAR)) continue;
+      const r = get(m);
+      r.revenue += num(o.subtotal_eur);
+      r.revenue_est += num(o.subtotal_eur);
+    }
+    for (const a of ausgang) {
+      const m = String(a.datum).slice(0, 7);
+      if (!m.startsWith(TAX_YEAR)) continue;
+      const r = get(m);
+      r.direct_brutto += num(a.brutto);
+      r.direct_netto += num(a.netto);
+      r.direct_ust += num(a.ust);
+    }
+    for (const b of belege) {
+      const m = String(b.datum).slice(0, 7);
+      if (!m.startsWith(TAX_YEAR)) continue;
+      const r = get(m);
+      r.vorsteuer += num(b.vorsteuer);
+      r.vorsteuer_pruefen += num(b.vorsteuer_pruefen);
+      r.belegkosten += num(b.kosten);
+    }
+    const rows = [...M.values()].sort((a, b) => (a.month < b.month ? -1 : 1));
+    const known = rows.filter((r) => r.revenue - r.revenue_est > 0).slice(-3);
+    const kr = d3.sum(known, (r) => r.revenue - r.revenue_est);
+    const feeRate = kr ? d3.sum(known, (r) => r.fees) / kr : 0.1;
+    return rows.map((r) => {
+      const fees = r.fees + r.revenue_est * feeRate;
+      const taxable = r.month >= UST_START;
+      const wnet = taxable ? r.revenue / 1.19 : r.revenue;
+      const net = wnet + (taxable ? r.direct_netto : r.direct_brutto);
+      const ust = (r.revenue - wnet) + (taxable ? r.direct_ust : 0);
+      const zahllast = taxable ? ust - r.vorsteuer : 0;
+      return {
+        month: r.month, taxable, revenue: r2(r.revenue + r.direct_brutto), revenue_whatnot: r2(r.revenue), revenue_direct: r2(r.direct_brutto), revenue_est: r2(r.revenue_est), revenue_net: r2(net), ust: r2(ust),
+        vorsteuer: r2(r.vorsteuer), vorsteuer_pruefen: r2(r.vorsteuer_pruefen), zahllast: r2(zahllast),
+        zahllast_mit_pruefen: r2(taxable ? zahllast - r.vorsteuer_pruefen : 0),
+        fees: r2(fees), shipping: r2(r.shipping), tips: r2(r.tips), whatnot_kosten: r2(fees + r.shipping),
+        belegkosten: r2(r.belegkosten), gewinn: r2(net + r.tips - fees - r.shipping - r.belegkosten),
+      };
+    });
+  },
+});
+dash.calc('tax_quarters', {
+  title: 'Umsatzsteuer pro Quartal',
+  description: 'Umsatzsteuer, Vorsteuer und Zahllast je Quartal ab Beginn der Umsatzsteuerpflicht.',
+  inputs: ['tax_monthly'],
+  fn: (months) => {
+    const Q = new Map();
+    for (const m of months) {
+      if (!m.taxable) continue;
+      const [y, mo] = m.month.split('-');
+      const q = `Q${Math.ceil(+mo / 3)} ${y}`;
+      const r = Q.get(q) || {quarter: q, from: m.month, to: m.month, ust: 0, vorsteuer: 0, zahllast: 0, zahllast_mit_pruefen: 0};
+      r.to = m.month;
+      for (const k of ['ust', 'vorsteuer', 'zahllast', 'zahllast_mit_pruefen']) r[k] += m[k];
+      Q.set(q, r);
+    }
+    return [...Q.values()].map((r) => ({...r, ust: r2(r.ust), vorsteuer: r2(r.vorsteuer), zahllast: r2(r.zahllast), zahllast_mit_pruefen: r2(r.zahllast_mit_pruefen)}));
+  },
+});
+dash.calc('tax_kpi', {
+  title: 'Steuern und Gewinn gesamt',
+  description: 'Jahressummen {{STEUERJAHR}}: Umsatzsteuer ab Beginn der Regelbesteuerung, Vorsteuer, Zahllast und Gewinn.',
+  inputs: ['tax_monthly', 'belege'],
+  fn: (months, belege) => {
+    const s = (k, f = () => true) => r2(d3.sum(months.filter(f), (m) => m[k]));
+    const tx = (m) => m.taxable;
+    return [{
+      belege: belege.length, ust: s('ust', tx), revenue_ust_period: s('revenue', tx), vorsteuer: s('vorsteuer', tx),
+      vorsteuer_pruefen: s('vorsteuer_pruefen', tx), zahllast: s('zahllast', tx), zahllast_mit_pruefen: s('zahllast_mit_pruefen', tx),
+      gewinn: s('gewinn'), revenue_direct: s('revenue_direct'), revenue_est: s('revenue_est'), revenue: s('revenue'), belegkosten: s('belegkosten'),
+    }];
+  },
+});
+dash.calc('cost_categories', {
+  title: 'Belegkosten nach Kategorie',
+  description: 'Kosten aus den Belegen {{STEUERJAHR}} je Kategorie (ab Beginn der Regelbesteuerung netto bei Vorsteuerabzug, sonst brutto), ohne Duplikate.',
+  inputs: ['belege'],
+  fn: (belege) => d3.rollups(belege.filter((b) => b.status !== 'Duplikat'), (v) => r2(d3.sum(v, (b) => num(b.kosten))), (b) => b.kategorie)
+    .map(([kategorie, kosten]) => ({kategorie, kosten})).sort((a, b) => b.kosten - a.kosten),
+});
+
+fieldDraw('t-nbelege', 'tax_kpi', (r) => F.int(r.belege));
+fieldDraw('t-ust', 'tax_kpi', (r) => F.eur2(r.ust));
+fieldDraw('t-rev-ust', 'tax_kpi', (r) => F.eur(r.revenue_ust_period));
+fieldDraw('t-vst', 'tax_kpi', (r) => F.eur2(r.vorsteuer));
+fieldDraw('t-vpr', 'tax_kpi', (r) => F.eur2(r.vorsteuer_pruefen));
+fieldDraw('t-gewinn', 'tax_kpi', (r) => F.eur(r.gewinn));
+dash.draw('t-zl-card', (el) => {
+  const d = ready(el, 'tax_kpi');
+  if (!d) return;
+  const r = d[0][0];
+  const refund = r.zahllast < 0;
+  const lab = mk('div', 'gc-label', refund ? 'Voraussichtliche Erstattung' : 'Voraussichtliche Zahllast');
+  const big = mk('div', 'gc-big', F.eur2(Math.abs(r.zahllast)));
+  big.dataset.source = 'tax_kpi'; big.dataset.field = 'zahllast'; big.dataset.row = '0';
+  const alt = r.zahllast_mit_pruefen;
+  const sub = mk('div', 'gc-sub', 'USt minus Vorsteuer; inkl. unsicherer Beträge ' + (alt < 0 ? 'Erstattung ' : 'Zahllast ') + F.eur2(Math.abs(alt)));
+  el.replaceChildren(lab, big, sub);
+});
+dash.draw('t-est-note', (el) => {
+  const d = ready(el, 'tax_kpi');
+  if (!d) return;
+  const r = d[0][0];
+  el.textContent = r.revenue_est > 0 ? `${F.eur(r.revenue_est)} Verkäufe stehen noch nicht im Finanzbericht, die Gebühren dafür sind geschätzt.` : '';
+});
+dash.draw('ch-gewinn', (el) => {
+  const d = ready(el, 'tax_monthly');
+  if (!d) return;
+  const data = d[0];
+  const W = Math.max(260, el.clientWidth), H = 200, mb = 26, mt = 10;
+  el.replaceChildren();
+  const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('role', 'img').attr('aria-label', 'Balkendiagramm: Gewinn oder Verlust pro Monat {{STEUERJAHR}}');
+  const ext = d3.extent(data, (r) => r.gewinn);
+  const ys = d3.scaleLinear().domain([Math.min(0, ext[0] || 0), Math.max(0, ext[1] || 1)]).nice().range([H - mb, mt]);
+  const ml = yAxis(svg, ys, 4, (v) => F.eur(v));
+  gridLines(svg, ys, 4, ml, W);
+  const xs = d3.scaleBand().domain(data.map((r) => r.month)).range([ml + 4, W - 2]).paddingInner(0.25).paddingOuter(0.1);
+  xAxis(svg, xs, data, (r) => F.mon(r.month), H - mb, W - ml);
+  svg.append('g').selectAll('rect').data(data).join('rect')
+    .attr('x', (r) => xs(r.month)).attr('width', xs.bandwidth())
+    .attr('y', (r) => ys(Math.max(0, r.gewinn))).attr('height', (r) => Math.abs(ys(r.gewinn) - ys(0)))
+    .style('fill', (r) => (r.gewinn < 0 ? 'var(--color-bad)' : dash.colors[0]));
+  svg.append('line').attr('class', 'gc-base').attr('x1', ml).attr('x2', W).attr('y1', ys(0)).attr('y2', ys(0));
+  const step = xs.step();
+  hover(el, svg, data, (r) => xs(r.month) - step * xs.paddingInner() / 2, step, H - mb, (r) => [
+    F.monLong(r.month), 'Gewinn: ' + F.eur2(r.gewinn), 'Verkäufe' + (r.taxable ? ' netto: ' : ': ') + F.eur2(r.revenue_net), 'davon eigene Rechnungen brutto: ' + F.eur2(r.revenue_direct),
+    'Belegkosten: ' + F.eur2(r.belegkosten), 'Whatnot-Gebühren & Versand: ' + F.eur2(r.whatnot_kosten), 'Trinkgeld: ' + F.eur2(r.tips)]);
+});
+dash.draw('tb-tax-q', (el) => {
+  const d = ready(el, 'tax_quarters');
+  if (!d) return;
+  fillTable(el, d[0], 'quarter', [
+    {field: 'quarter', fmt: (v, r) => `${v} (${F.mon(r.from)}${r.to !== r.from ? '–' + F.mon(r.to) : ''})`, cls: 'nw'},
+    {field: 'ust', fmt: (v) => F.eur2(v), cls: 'num'},
+    {field: 'vorsteuer', fmt: (v) => F.eur2(v), cls: 'num'},
+    {field: 'zahllast', fmt: (v) => F.eur2(v), cls: 'num'},
+    {field: 'zahllast_mit_pruefen', fmt: (v) => F.eur2(v), cls: 'num'},
+  ]);
+});
+dash.draw('tb-tax-m', (el) => {
+  const d = ready(el, 'tax_monthly');
+  if (!d) return;
+  fillTable(el, d[0].slice().reverse(), 'month', [
+    {field: 'month', fmt: (v) => F.monLong(v), cls: 'nw'},
+    {field: 'revenue_whatnot', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'revenue_direct', fmt: (v) => (v ? F.eur(v) : '—'), cls: 'num'},
+    {field: 'ust', fmt: (v, r) => (r.taxable ? F.eur2(v) : '—'), cls: 'num'},
+    {field: 'vorsteuer', fmt: (v, r) => (r.taxable ? F.eur2(v) : '—'), cls: 'num'},
+    {field: 'zahllast', fmt: (v, r) => (r.taxable ? F.eur2(v) : '—'), cls: 'num'},
+    {field: 'belegkosten', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'whatnot_kosten', fmt: (v) => F.eur(v), cls: 'num'},
+    {field: 'gewinn', fmt: (v) => F.eur(v), cls: 'num'},
+  ]);
+});
+dash.draw('ch-cost-cat', (el) => {
+  const d = ready(el, 'cost_categories');
+  if (!d) return;
+  hbars(el, d[0], {label: 'kategorie', value: 'kosten', color: dash.colors[0], source: 'cost_categories', fmt: (v) => F.eur(v)});
+});
+let belFilter = 'all';
+const BEL_FLAG = {abziehbar: 'is-ok', 'prüfen': 'is-warn', 'nicht abziehbar': 'is-bad'};
+function renderBelege(el) {
+  const d = ready(el, 'belege');
+  if (!d) return;
+  const q = (document.getElementById('bel-search')?.value || '').trim().toLowerCase();
+  const rows = d[0].filter((b) => {
+    if (belFilter === 'abziehbar' && !(num(b.vorsteuer) > 0)) return false;
+    if (belFilter === 'pruefen' && b.status !== 'prüfen') return false;
+    if (belFilter === 'ohne' && num(b.vorsteuer) > 0) return false;
+    return !q || [b.lieferant, b.nummer, b.kategorie, b.hinweis].join(' ').toLowerCase().includes(q);
+  }).slice().reverse();
+  el.replaceChildren(...rows.map((b) => {
+    const tr = mk('tr');
+    tr.dataset.key = encodeURIComponent(b.datei);
+    tr.append(mk('td', 'nw', F.dateShort(b.datum + 'T12:00:00')), mk('td', '', b.lieferant), mk('td', 'nw', b.nummer || '—'),
+      mk('td', 'nw', b.kategorie), mk('td', 'num', F.eur2(num(b.brutto))), mk('td', 'num', num(b.vorsteuer) ? F.eur2(num(b.vorsteuer)) : '—'));
+    const st = mk('td', 'nw');
+    const early = b.ab_ust_pflicht === 'nein' && (b.status === 'abziehbar' || b.status === 'prüfen');
+    st.appendChild(mk('span', 'gc-flag ' + (early ? '' : BEL_FLAG[b.status] || ''), early ? 'vor Aug., ohne Abzug' : b.status));
+    tr.append(st, mk('td', 'gc-t', b.hinweis || ''));
+    return tr;
+  }));
+}
+const refreshBelege = () => document.querySelectorAll('[data-draw="tb-belege"]').forEach(renderBelege);
+dash.draw('tb-belege', renderBelege);
+document.querySelectorAll('[data-bel-filter]').forEach((b) => b.addEventListener('click', () => {
+  belFilter = b.dataset.belFilter;
+  document.querySelectorAll('[data-bel-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  refreshBelege();
+}));
+document.getElementById('bel-search')?.addEventListener('input', refreshBelege);
+
+fieldDraw('t-direct', 'tax_kpi', (r) => F.eur(r.revenue_direct));
+dash.draw('t-nausgang', (el) => {
+  const d = ready(el, 'ausgang');
+  if (!d) return;
+  el.textContent = F.int(d[0].length);
+});
+dash.draw('tb-ausgang', (el) => {
+  const d = ready(el, 'ausgang');
+  if (!d) return;
+  el.replaceChildren(...d[0].slice().reverse().map((a) => {
+    const tr = mk('tr');
+    tr.dataset.key = encodeURIComponent(a.nummer);
+    const st = mk('td', 'nw');
+    st.appendChild(mk('span', 'gc-flag ' + (a.status === 'prüfen' ? 'is-warn' : 'is-ok'), a.status));
+    tr.append(mk('td', 'nw', F.dateShort(a.datum + 'T12:00:00')), mk('td', 'num', a.nummer), mk('td', 'gc-t', a.artikel),
+      mk('td', 'num', F.eur2(num(a.netto))), mk('td', 'num', num(a.ust) ? F.eur2(num(a.ust)) + ' (' + a.ust_satz + ' %)' : '—'),
+      mk('td', 'num', F.eur2(num(a.brutto))), st, mk('td', 'gc-t', a.hinweis || ''));
+    return tr;
+  }));
+});
+dash.draw('t-ausgang-note', (el) => {
+  const d = ready(el, 'ausgang');
+  if (!d) return;
+  const nums = d[0].map((a) => Number(a.nummer)).filter(Number.isFinite).sort((a, b) => a - b);
+  const gaps = [];
+  for (let i = nums[0]; i < nums[nums.length - 1]; i++) if (!nums.includes(i)) gaps.push(i);
+  el.textContent = 'Kundennamen und Adressen werden nicht angezeigt.' + (gaps.length ? ` Fehlende Rechnungsnummern: ${gaps.join(', ')} (storniert oder noch nicht abgelegt?).` : '');
+});
+</script>
