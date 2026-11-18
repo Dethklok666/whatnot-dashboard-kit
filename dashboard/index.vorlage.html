@@ -119,6 +119,11 @@
       <div class="gc-big" data-draw="k-orders" data-source="kpi" data-field="orders_30" data-row="0">—</div>
       <div class="gc-sub">davor: <span data-draw="k-orders-prev" data-source="kpi" data-field="orders_prev_30" data-row="0">—</span></div>
     </div>
+    <div class="gc-card" id="tile-kunden">
+      <div class="gc-label">Kunden · letzte 30 Tage</div>
+      <div class="gc-big" data-draw="k-cust" data-source="kpi" data-field="customers_30" data-row="0">—</div>
+      <div class="gc-sub">davor: <span data-draw="k-cust-prev" data-source="kpi" data-field="customers_prev_30" data-row="0">—</span> · insgesamt: <span data-draw="k-cust-all" data-source="kpi" data-field="customers_total" data-row="0">—</span></div>
+    </div>
     <div class="gc-card" id="tile-bestellwert">
       <div class="gc-label">Ø Bestellwert · letzte 30 Tage</div>
       <div class="gc-big" data-draw="k-aov" data-source="kpi" data-field="avg_order_30" data-row="0">—</div>
@@ -538,18 +543,21 @@ const F = {
 // ---------- Berechnungen ----------
 dash.calc('kpi', {
   title: 'Kennzahlen der letzten 30 Tage',
-  description: 'Warenwert, Bestellungen und Shows der letzten 30 Tage bis zur neuesten Bestellung, verglichen mit den 30 Tagen davor, dazu offene Sendungen.',
+  description: 'Warenwert, Bestellungen, verschiedene Kunden (ohne Giveaways) und Shows der letzten 30 Tage bis zur neuesten Bestellung, verglichen mit den 30 Tagen davor, dazu Kunden insgesamt und offene Sendungen.',
   inputs: ['orders', 'shows', 'shipments', 'upcoming', 'products'],
   fn: (orders, shows, shipments, upcoming, products) => {
     const day = 864e5;
     const endMs = orders.reduce((m, o) => Math.max(m, Date.parse(o.created_at)), 0);
     const inWindow = (t, fromDays, toDays) => t > endMs - toDays * day && t <= endMs - fromDays * day;
     let sales30 = 0, orders30 = 0, salesPrev = 0, ordersPrev = 0;
+    const cust30 = new Set(), custPrev = new Set(), custAll = new Set();
     for (const o of orders) {
       if (o.status === 'cancelled' || o.status === 'failed') continue;
       const t = Date.parse(o.created_at), v = Number(o.subtotal_eur) || 0;
-      if (inWindow(t, 0, 30)) { sales30 += v; orders30 += 1; }
-      else if (inWindow(t, 30, 60)) { salesPrev += v; ordersPrev += 1; }
+      const buyer = o.transaction_type !== 'giveaway' && o.buyer_key ? o.buyer_key : null;
+      if (buyer) custAll.add(buyer);
+      if (inWindow(t, 0, 30)) { sales30 += v; orders30 += 1; if (buyer) cust30.add(buyer); }
+      else if (inWindow(t, 30, 60)) { salesPrev += v; ordersPrev += 1; if (buyer) custPrev.add(buyer); }
     }
     const open = shipments.filter((s) => s.status === 'created');
     const dues = open.map((s) => s.dropoff_due).filter(Boolean).sort();
@@ -563,6 +571,9 @@ dash.calc('kpi', {
       change_abs_pct: change === null ? null : Math.abs(change),
       orders_30: orders30,
       orders_prev_30: ordersPrev,
+      customers_30: cust30.size,
+      customers_prev_30: custPrev.size,
+      customers_total: custAll.size,
       avg_order_30: orders30 ? Math.round(sales30 / orders30 * 100) / 100 : null,
       shows_30: shows.filter((s) => inWindow(Date.parse(s.start_time), 0, 30)).length,
       next_show: next[0] || null,
@@ -1107,6 +1118,9 @@ kpiDraw('tw-dir', (r) => (r.change_pct == null ? '' : r.change_pct >= 0 ? 'mehr'
 kpiDraw('k-sales', (r) => F.eur(r.sales_30));
 kpiDraw('k-orders', (r) => F.int(r.orders_30));
 kpiDraw('k-orders-prev', (r) => F.int(r.orders_prev_30));
+kpiDraw('k-cust', (r) => F.int(r.customers_30));
+kpiDraw('k-cust-prev', (r) => F.int(r.customers_prev_30));
+kpiDraw('k-cust-all', (r) => F.int(r.customers_total));
 kpiDraw('k-aov', (r) => (r.avg_order_30 == null ? '—' : F.eur2(r.avg_order_30)));
 kpiDraw('k-shows', (r) => F.int(r.shows_30));
 kpiDraw('k-next', (r) => (r.next_show ? F.showTime(r.next_show) : 'keine'));
